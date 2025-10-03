@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-debug",
+            "type": "shell",
+            "command": "gfortran",
+            "args": [
+                "-g",
+                "-o", "${fileBasenameNoExtension}.exe",
+                "-Wall",
+                "${fileBasename}"//,             "mod*.o"
+            ],
+            "options": {
+                "cdw": "${workspaceRoot}"
+            }
+            
+        },
+        {
+            "label": "build-release",
+            "type": "shell",
+            "command": "gfortran",
+            "args": [
+                "-O3",
+                "-o", "${fileBasenameNoExtension}O3.exe",
+                "-Wall",
+                "${fileBasename}"
+            ],
+            "options": {
+                "cdw": "${workspaceRoot}"
+            }
+        },
+        {
+            "label": "compilemod-debug",
+            "type": "shell",
+            "command": "gfortran",
+            "args": [
+                "-g",
+                "-c",
+                "-Wall",
+                "mod*.f90"
+            ],
+            "options": {
+                "cdw": "${workspaceRoot}"
+            }
+        },
+    ]
+    }
