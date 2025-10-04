@@ -1,22 +1,39 @@
 program bitmatrix
 implicit none
-integer(kind=8):: r,t
+integer(kind=8):: r,t(4),r2(4),r3(4),t1(4)
 
 r = 45
-t = ishft(r,2+56)
+r2(1) = 3
+r3(1)= 3
+r2(1) = ishft(r2(1), 6+56)
+r3(1) = ishft(r3(1), 5+56)
+t(1) = ishft(r,2+56)
 print *, "Hello!"
 print *, t
+t1(1)=xor(t(1),xor(r2(1),r3(1)))
+call axor(t,r2)
+call axor(t,r3)
+call print_binary(t(1))
 
-call print_binary(t)
 
+contains
+ subroutine axor(r,b)
+    integer(kind=8), intent(inout):: r(:)
+    integer(kind=8), intent(in)::b(:)
+    integer(kind=8)::i,n
+    n = size(r)
+    do i=1,n
+      r(i)=xor(r(i),b(i))
+    end do
+  end subroutine
 end program
 
-
-! ==============================================================================
-! Subroutine: print_binary
-! Purpose: Extracts and prints the bits of an input integer value.
-! ==============================================================================
-subroutine print_binary(value)
+ 
+  ! ==============================================================================
+  ! Subroutine: print_binary
+  ! Purpose: Extracts and prints the bits of an input integer value.
+  ! ==============================================================================
+  subroutine print_binary(value)
     implicit none
     
     ! Input argument
