@@ -11,6 +11,10 @@
                 "-Wall",
                 "${fileBasename}"//,             "mod*.o"
             ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "options": {
                 "cdw": "${workspaceRoot}"
             }
