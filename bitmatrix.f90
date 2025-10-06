@@ -1,7 +1,7 @@
 program bitmatrix
 implicit none
-integer(kind=8):: r,t(64,1),r2(4),r3(4),i,j,k,m,n,p,l,l1
-real(kind=8)::t1(64,1)
+integer(kind=8):: r,t(64,4),r2(4),r3(4),i,j,k,m,n,p,l,l1
+real(kind=8)::t1(64,4)
 t = 0
 r2=0
 r3=0
@@ -27,6 +27,10 @@ write (*,'(4I21)') t
 write (*,'(3I3)') size(t(1,:)), size(t(:,1)), min(8*8*size(t(1,:)),size(t(:,1)))
 l=1
 l1=l
+do j=1,size(t(:,1))
+  call print_binary(t(j,:))
+end do
+print *,""
 do i=1,min(8*8*size(t(1,:)),size(t(:,1)))-1
   n = mod(i-1,8*8)+1
   m = (i-1)/(8*8)+1
@@ -37,7 +41,7 @@ do i=1,min(8*8*size(t(1,:)),size(t(:,1)))-1
     p = ishft(p,-1)
   end if
   do j=l+1,size(t(:,1))
-    if ((j.eq.l+1) .and. (and(p,t(l,m)) .eq. 0)) then
+    if ((j.eq.l+1) .and. (and(p,t(l,m)) .ne. 0)) then
       l1=l1+1
     end if
     if (and(p,t(j,m)) .ne. 0) then
@@ -53,11 +57,20 @@ do i=1,min(8*8*size(t(1,:)),size(t(:,1)))-1
 100 continue
   end do
   if (l1 .gt.l) then
-    call print_binary(t(l,:))
+    
+    if (i.eq.63) then
+      do j=1,size(t(:,1))
+        call print_binary(t(j,:))
+      end do
+      goto 200
+    end if
     l=l1
   end if
 end do
-
+do j=1,size(t(:,1))
+        call print_binary(t(j,:))
+end do
+200 continue
 
 contains
  subroutine axor(r,b)
@@ -120,7 +133,7 @@ contains
     res(j) = trim(binary_string)
   end do 
     ! Print the final result.
-    write(*, '(A)')  res
+    write(*, '(4A)')  res
     
   end subroutine print_binary
 end program
