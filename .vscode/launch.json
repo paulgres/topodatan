@@ -16,7 +16,6 @@
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
-        "miDebuggerPath": "/usr/bin/gdbus",
         "preLaunchTask": "build-debug",
         "setupCommands": [
           {

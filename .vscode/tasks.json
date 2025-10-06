@@ -9,7 +9,7 @@
                 "-g",
                 "-o", "${fileBasenameNoExtension}.exe",
                 "-Wall",
-                "${fileBasename}"//,             "mod*.o"
+                "${fileBasename}",             "mod*.o"
             ],
             "group": {
                 "kind": "build",

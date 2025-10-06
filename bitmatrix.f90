@@ -1,36 +1,42 @@
 program bitmatrix
+  use modmem
 implicit none
-integer(kind=8):: r,t(64,4),r2(4),r3(4),i,j,k,m,n,p,l,l1
-real(kind=8)::t1(64,4)
-t = 0
-r2=0
-r3=0
-r = 45
-r2(1) = 3
-r3(1)= 3
-r2(1) = ishft(r2(1), 6+56)
-r3(1) = ishft(r3(1), 5+56)
-t(1,1) = ishft(r,2+56)
-t(2,1) = 50
-print *, "Hello!"
+integer(kind=8)::msize = 16384
+integer(kind=8),allocatable::t(:,:)
+integer(kind=8):: r,r2(4),r3(4),i,j,k,m,n,p,l,l1
+real(kind=8),allocatable::t1(:,:)
+real::start,stop
+call alloci(t,msize*64,msize)
+call allocm(t1,msize*64,msize)
+
+! r2(1) = 3
+! r3(1)= 3
+! r2(1) = ishft(r2(1), 6+56)
+! r3(1) = ishft(r3(1), 5+56)
+! t(1,1) = ishft(r,2+56)
+! t(2,1) = 50
+
 !call print_binary(t(1,1))
 !call axor(t(1,:),r2)
 !call axor(t(1,:),r3)
 call random_number(t1)
-write (*,'(4f8.4)') t1
+!write (*,'(4f8.4)') t1
 t=floor(t1*8446744073709551615.0,8)
-write (*,'(4I21)') t
+!write (*,'(4I21)') t
 !t(1:2:2-1,:)=t(2:1:1-2,:)
 !call print_binary(t(1,1))
 !call print_binary(t(2,1))
 
-write (*,'(3I3)') size(t(1,:)), size(t(:,1)), min(8*8*size(t(1,:)),size(t(:,1)))
+write (*,'(3I5)') size(t(1,:)), size(t(:,1)), min(8*8*size(t(1,:)),size(t(:,1)))
 l=1
 l1=l
-do j=1,size(t(:,1))
-  call print_binary(t(j,:))
-end do
+! do j=1,size(t(:,1))
+!   call print_binary(t(j,:))
+! end do
 print *,""
+
+call cpu_time(start)
+
 do i=1,min(8*8*size(t(1,:)),size(t(:,1)))-1
   n = mod(i-1,8*8)+1
   m = (i-1)/(8*8)+1
@@ -58,18 +64,23 @@ do i=1,min(8*8*size(t(1,:)),size(t(:,1)))-1
   end do
   if (l1 .gt.l) then
     
-    if (i.eq.63) then
-      do j=1,size(t(:,1))
-        call print_binary(t(j,:))
-      end do
-      goto 200
-    end if
+    ! if (i.eq.63) then
+    !   do j=1,size(t(:,1))
+    !     call print_binary(t(j,:))
+    !   end do
+    !   goto 200
+    ! end if
     l=l1
   end if
 end do
-do j=1,size(t(:,1))
-        call print_binary(t(j,:))
-end do
+call cpu_time(stop)
+    print *, 'elapsed:', stop-start
+    call freem(t1)
+    call freei(t)
+write (*,'(A,I5)') "Rank: ",l-1
+! do j=1,size(t(:,1))
+!         call print_binary(t(j,:))
+! end do
 200 continue
 
 contains
@@ -98,7 +109,7 @@ contains
     integer :: i,j,n
     character(len=1) :: bit_char(64) ! Array to store '0' or '1'
     character(len=256) :: binary_string
-    character(len=64) :: res(1)
+    character(len=64) :: res(4)
   
     n = size(value)
     do j=1,n
@@ -133,7 +144,7 @@ contains
     res(j) = trim(binary_string)
   end do 
     ! Print the final result.
-    write(*, '(4A)')  res
+    write(*, '(A)')  res(1)
     
   end subroutine print_binary
 end program
