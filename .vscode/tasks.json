@@ -48,5 +48,19 @@
                 "cdw": "${workspaceRoot}"
             }
         },
+        {
+            "label": "compilemod-release",
+            "type": "shell",
+            "command": "gfortran",
+            "args": [
+                "-O3",
+                "-c",
+                "-Wall",
+                "mod*.f90"
+            ],
+            "options": {
+                "cdw": "${workspaceRoot}"
+            }
+        },
     ]
     }
