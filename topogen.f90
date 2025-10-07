@@ -2,7 +2,7 @@ program topogen
     use modmem
 implicit none
 real(kind=8),parameter::pi = 4*atan(1.0_8)
-integer(kind=8),parameter::n=5000,m=2
+integer(kind=8),parameter::n=1024*2,m=2
 integer::f,i,j,idx(n)
 real(kind=8), allocatable::t(:,:), r(:,:), t2(:,:)
 real(kind=4)::d,dmin
