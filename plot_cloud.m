@@ -34,7 +34,7 @@ ylabel('Y Data');
 grid on;
 
 disp('Data read successfully and plotted.');
-disp('X values:');
-disp(X');
-disp('Y values:');
-disp(Y');
+% disp('X values:');
+% disp(X');
+% disp('Y values:');
+% disp(Y');
