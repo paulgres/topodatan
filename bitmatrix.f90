@@ -1,7 +1,7 @@
 program bitmatrix
   use modmem
 implicit none
-integer(kind=8)::msize = 4000
+integer(kind=8)::msize = 1000
 integer(kind=8),allocatable::t(:,:)
 integer(kind=8):: r,r2(4),r3(4),i,j,k,m,n,p,l,l1
 real(kind=8),allocatable::t1(:,:)

@@ -26,7 +26,7 @@
             "command": "gfortran",
             "args": [
                 "-O3",
-                "-o", "${fileBasenameNoExtension}O3_2.exe",
+                "-o", "${fileBasenameNoExtension}O3_1000.exe",
                 "-Wall",
                 "${fileBasename}",             "mod*.o"
             ],
