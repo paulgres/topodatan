@@ -26,9 +26,9 @@
             "command": "gfortran",
             "args": [
                 "-O3",
-                "-o", "${fileBasenameNoExtension}O3.exe",
+                "-o", "${fileBasenameNoExtension}O3_2.exe",
                 "-Wall",
-                "${fileBasename}"
+                "${fileBasename}",             "mod*.o"
             ],
             "options": {
                 "cdw": "${workspaceRoot}"
@@ -41,6 +41,7 @@
             "args": [
                 "-g",
                 "-c",
+                "-mcmodel=medium",
                 "-Wall",
                 "mod*.f90"
             ],
@@ -55,6 +56,7 @@
             "args": [
                 "-O3",
                 "-c",
+                "-mcmodel=medium",
                 "-Wall",
                 "mod*.f90"
             ],

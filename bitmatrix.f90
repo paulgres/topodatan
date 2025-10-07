@@ -1,7 +1,7 @@
 program bitmatrix
   use modmem
 implicit none
-integer(kind=8)::msize = 16384
+integer(kind=8)::msize = 4000
 integer(kind=8),allocatable::t(:,:)
 integer(kind=8):: r,r2(4),r3(4),i,j,k,m,n,p,l,l1
 real(kind=8),allocatable::t1(:,:)
@@ -27,7 +27,7 @@ t=floor(t1*8446744073709551615.0,8)
 !call print_binary(t(1,1))
 !call print_binary(t(2,1))
 
-write (*,'(3I5)') size(t(1,:)), size(t(:,1)), min(8*8*size(t(1,:)),size(t(:,1)))
+write (*,'(3I8)') size(t(1,:)), size(t(:,1)), min(8*8*size(t(1,:)),size(t(:,1)))
 l=1
 l1=l
 ! do j=1,size(t(:,1))
@@ -77,7 +77,7 @@ call cpu_time(stop)
     print *, 'elapsed:', stop-start
     call freem(t1)
     call freei(t)
-write (*,'(A,I5)') "Rank: ",l-1
+write (*,'(A,I15)') "Rank: ",l-1
 ! do j=1,size(t(:,1))
 !         call print_binary(t(j,:))
 ! end do

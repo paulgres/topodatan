@@ -5,7 +5,7 @@
     contains
     
     subroutine allocm(a, n,m)
-        real(kind=8), allocatable, intent(in out) :: a(:, :)
+        real(kind=8), allocatable, intent(inout) :: a(:,:)
         integer(kind=8), intent(in) :: n,m
         integer :: stat
         character(len=100) :: errmsg
@@ -13,8 +13,9 @@
         allocate(a(n,m), stat=stat, errmsg=errmsg)
         if (stat > 0) error stop errmsg
     end subroutine allocm
-      subroutine alloci(a, n,m)
-        integer(kind=8), allocatable, intent(in out) :: a(:, :)
+
+    subroutine alloci(a, n,m)
+        integer(kind=8), allocatable, intent(inout) :: a(:, :)
         integer(kind=8), intent(in) :: n,m
         integer :: stat
         character(len=100) :: errmsg
