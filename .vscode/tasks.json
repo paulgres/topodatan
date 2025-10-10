@@ -9,6 +9,7 @@
                 "-g",
                 "-o", "${fileBasenameNoExtension}.exe",
                 "-Wall",
+                "-mcmodel=medium",
                 "${fileBasename}",             "mod*.o"
             ],
             "group": {
