@@ -4,7 +4,7 @@
 % with three columns: X, Y, and a color index (1 to 24).
 
 % 1. Define the filename
-filename = 'xy.txt';
+filename = 'xyv.txt';
 
 % 2. Read the data from the file into a matrix
 try

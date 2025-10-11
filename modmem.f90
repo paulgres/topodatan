@@ -6,7 +6,7 @@
     
     subroutine allocm(a, n,m)
         real(kind=8), allocatable, intent(inout) :: a(:,:)
-        integer(kind=8), intent(in) :: n,m
+        integer(kind=4), intent(in) :: n,m
         integer :: stat
         character(len=100) :: errmsg
         if (allocated(a)) call freem(a)
