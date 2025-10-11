@@ -1,7 +1,7 @@
     module modmem
     implicit none
     private
-    public ::alloc, allocm, freea, freem, alloci, freei
+    public ::alloc, allocm, allocb, freeb, freea, freem, alloci, freei
     contains
     
     subroutine allocm(a, n,m)
@@ -13,7 +13,15 @@
         allocate(a(n,m), stat=stat, errmsg=errmsg)
         if (stat > 0) error stop errmsg
     end subroutine allocm
-
+    subroutine allocb(a, n,m)
+        logical, allocatable, intent(inout) :: a(:,:)
+        integer(kind=4), intent(in) :: n,m
+        integer :: stat
+        character(len=100) :: errmsg
+        if (allocated(a)) call freeb(a)
+        allocate(a(n,m), stat=stat, errmsg=errmsg)
+        if (stat > 0) error stop errmsg
+    end subroutine allocb
     subroutine alloci(a, n,m)
         integer(kind=8), allocatable, intent(inout) :: a(:, :)
         integer(kind=8), intent(in) :: n,m
@@ -41,7 +49,14 @@
         deallocate(a, stat=stat, errmsg=errmsg)
         if (stat > 0) error stop errmsg
     end subroutine freea
-    
+    subroutine freeb(a)
+        logical, allocatable, intent(in out) :: a(:,:)
+        integer :: stat
+        character(len=100) :: errmsg
+        if (.not. allocated(a)) return
+        deallocate(a, stat=stat, errmsg=errmsg)
+        if (stat > 0) error stop errmsg
+    end subroutine freeb
     subroutine freem(a)
         real(kind=8), allocatable, intent(in out) :: a(:,:)
         integer :: stat
