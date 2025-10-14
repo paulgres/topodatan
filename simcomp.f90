@@ -5,8 +5,8 @@ implicit none
 real(kind=8),parameter::pi = 4*atan(1.0_8)
 
 !real(4)::dmat(n,n)
-integer::f,f1,i,j,k,l,k1,k2,n,m,l1
-logical, allocatable::d1(:,:),t(:,:)!,s2(:,:,:)
+integer::f,f1,i,j,k,l,k1,k2,n,m,l1,tt(1024)
+logical, allocatable::d1(:,:),d2(:,:),t(:,:)!,s2(:,:,:)
 real, parameter:: epsilon = .2
 real(kind=8), allocatable::r(:,:), ts1(:,:)
 real(kind=4)::d,stop,start
@@ -46,16 +46,16 @@ do i = 1,n-1
     
     if (d.lt.epsilon) then
       k=k+1
+      tt(k) = j
       !if (j.gt.i+k) then 
       !  r(:,k+i:j:j-k-i)=r(:,j:k+i:k+i-j)
       !end if
       
       !s1(i,i+k)=.true.
       k1=k1+1
-      if (j.eq.1024) then
-        print *,i,j,k1
-
-      end if
+      !if (j.eq.1024) then
+      !  print *,i,j,k1
+      !end if
       d1(k1,i) = .true.
       d1(k1,j) = .true.
       ts1(1:2,k1) = r(:,i)
@@ -65,12 +65,13 @@ do i = 1,n-1
 
   end do
   if (k.gt.1) then
-    do j = i+1, i+k-1
-      do l = j+1,i+k
+    do j = 1, k-1
+      do l = j+1,k
         d = CABS(cmplx(r(1,l),r(2,l),4) - cmplx(r(1,j),r(2,j),4)) 
         
         if (d.lt.epsilon) then
-            k2=k2+1
+          k2=k2+1
+          !d2(k2,)
           !s2(i,j,l)=.true.
         end if
       end do

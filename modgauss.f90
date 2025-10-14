@@ -18,13 +18,13 @@ end function
         triangl = 0
         l=1
         l1=l
-        do i=1,max(size(d1(1,:)),size(d1(:,1)))
-        
-            do j=l+1,size(d1(1,:))
-                if ((j.eq.l+1) .and. (d1(i,l))) then
-                l1=l1+1
+        do i=1,size(d1(:,1))
+            
+            do j=l,size(d1(1,:))
+                if (d1(i,l).and.(l.eq.j)) then
+                    l1=l1+1
                 end if
-                if (d1(i,j) ) then
+                if (d1(i,j).and.(j>l) ) then
                     if (.not.d1(i,l)) then
                         d1(:,l:j:j-l)=d1(:,j:l:l-j)
                         l1=l1+1
