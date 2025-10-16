@@ -7,7 +7,7 @@ real(kind=8),parameter::pi = 4*atan(1.0_8)
 !real(4)::dmat(n,n)
 integer::f,f1,i,j,k,l,k1,k2,n,m,l1,tt(1024)
 logical, allocatable::d1(:,:),d2(:,:),t(:,:)!,s2(:,:,:)
-real, parameter:: epsilon = .2
+real, parameter:: epsilon = .45
 real(kind=8), allocatable::r(:,:), ts1(:,:)
 real(kind=4)::d,stop,start
 character(50)::fmt1, fmt2
@@ -78,7 +78,8 @@ do i = 1,n-1
     end do
   end if
 end do
-
+print *, "k1 =  ", k1
+print *, "k2 =  ", k2
 open(newunit=f1,file='edges.txt',status='replace',action='write',iostat=f)
 write (f1,'(4(1x,ES19.12))',err=501) ts1(:,1:k1)
 501 close(f1)
