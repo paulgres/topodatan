@@ -1,16 +1,10 @@
 module modgauss
     implicit none
     private
-    public::triangl,int2str
+    public::triangl
 
     contains
-pure function int2str(i)result(res)
-    integer, intent(in)::i
-     character(21)::s
-    character(:), allocatable::res
-    write(s, '(I20)') i
-    res = trim(adjustl(s))  
-end function
+
     function triangl(d1)
         integer::triangl
         logical,intent(inout)::d1(:,:)

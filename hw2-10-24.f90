@@ -1,16 +1,21 @@
 program hw2
   use modgauss
+  use modaux
     implicit none
 
     type :: point
       integer::num
     end type
+    
     integer, parameter:: n=4,m=2
-    logical::d1(n*(n-1)/2,n),d2(n,n),fa(n,n,n),ed(n,n)
+    logical::d1(n*(n-1)/2,n),fa(n,n,n),ed(n,n)
+    logical::d2(n*(n-1)*(n-2)/6,n*(n-1)/2)
     integer::i,j,k,tt(n),k1,k2,f,l,k3
-    real:: eps,d,r,edges(m*2+2,n*(n-1)/2),dvr1(n,n),dch1(n,n) , dvr2(n,n,n), dch2(n,n,n), dch(n*(n-1)),dvr(n*(n-1)/2)
-    real, dimension(2,4) ::pts
-    pts = reshape((/ 0.,-2.,-1.,0.,1.,0.,0.,2./), shape=(/m,n/))
+    real:: eps,d,r,edges(m*2+2,n*(n-1)/2),d1r(n*(n-1)/2,n),dvr1(n,n),dch1(n,n) 
+    real::dvr2(n,n,n), dch2(n,n,n), dch(n*(n-1)),dvr(n*(n-1)/2)
+    real::faces(m*3+2,n*(n-1)*(n-2)/6),d2r(n*(n-1)*(n-2)/6,n*(n-1)/2)
+    real, dimension(m,n) ::pts
+    pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2./), shape=(/m,n/))
 
 
     eps = 4
@@ -18,14 +23,16 @@ program hw2
 k1=0
 k2=0
 k3=0
+d1r = 0.0
+d2r = 0.0
 dvr1=-1.0
 dch1=-1.0 
 dvr2=-1.0
 dch2=-1.0 
 d1=.false.
-!dmat=10*epsilon
-do i = 1,n-1
   k=0
+do i = 1,n-1
+
   f=0
   do j = i+1,n
     if (dvr1(j,i).le.0.0) then
@@ -44,6 +51,8 @@ do i = 1,n-1
       k1=k1+1
       d1(k1,i) = .true.
       d1(k1,j) = .true.
+      d1r(k1,i) = d/2
+      d1r(k1,j) = d/2
       edges(1:2,k1) = pts(:,i)
       edges(3:4,k1) = pts(:,j)
       edges(5,k1) = d
@@ -60,30 +69,37 @@ do i = 1,n-1
         
         
         !dch(k3)=d/2.0
+        !EDGES
+        !j->l, i->j, i->l
         d = max(max(dvr1(i,j),dvr1(i,l)),d)
         dvr2(l,j,i)=d
         r=round(trad(pts(:,i),pts(:,j),pts(:,l))+.001,3)
-        k3=k3+1
-        
+        k=k+1
+        d2r(k,nedge(i,j,n))=r
+        d2r(k,nedge(j,l,n))=r
+        d2r(k,nedge(i,l,n))=r
         dch2(l,j,i) = r
+        k3=k3+1
         dch(k3)=r
       end do
     end do
   
 end do
+d1=((d1r.gt.0.0+.001).and.(d1r.le.1.15+.001))
+d2=((d2r.gt.0.0)).and.(d2r.le.1.2+.001)!(d2r.le.1.25).and.
 print *, "k1 =  ", k1
 print *, "k2 =  ", k2
 print *, "k3 =  ", k3
 print *
 print *, "Viettoris-Rips"
-write (*, '(4f6.2)') dvr1
+write (*, '(5f6.2)') dvr1
 print *
-write (*, '(4f6.2)') dvr2
+write (*, '(5f6.2)') dvr2
 print *
 print *, "Cech"
-write (*, '(4f6.2)') dch1
+write (*, '(5f6.2)') dch1
 print *
-write (*, '(4f6.2)') dch2
+write (*, '(5f6.2)') dch2
 ! print *
 ! write (*, '(f6.2)') dvr(1:k2)
 ! call hpsortn(k2,dvr)
@@ -104,128 +120,24 @@ l=triangl(d1)
 
 print *, "rank: ",l
 
+
+print *
+write (*, '('// int2str(cnk(n,2)) //'f6.2)') d1r
+print *
+write (*, '('// int2str(cnk(n,2)) //'l2)') ((d1r.gt.0.0+.001))!.and.(d1r.le.1.15+.001)
+print *
+write (*, '('// int2str(cnk(n,2)) //'l2)') (d1r.le.1.15+.001)
+print *
+write (*, '('// int2str(cnk(n,2)) //'l2)') d1
+print *
+write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2r
+print *
+write (*, '('// int2str(cnk(n,3)) //'l2)') d2 !(d2r.le.1.25)
+print *, triangl(d2)
+!write (*, '('// int2str(cnk(n,3)) //'l2)') (d2r.le.1.25+.001)
 contains
-pure function trad(a,b,c)
-  real, dimension(:),intent(in):: a,b,c
-  
-  real :: trad
-  real::alpha
-  trad =0.0
 
-  alpha = acos(dot_product(b-a,c-a)/norm2(b-a)/norm2(c-a))
-  trad = norm2(b-a-(c-a))/2/sin(alpha)
 
-end function
 
-pure function round(v,n)
-  implicit none
-  real, intent(in) :: v
-  real:: round
-  integer, intent(in) :: n
-  round = anint(v*10.0**n)/10.0**n
-end function round
 
-subroutine hpsort(n,ra)
-  implicit none
-  integer,intent(in)::n
-  real,dimension(:), intent(inout)::ra
-  integer::i,ir,j,l
-  real::rra
-
-  if(n.lt.2) return
-  l=n/2+1
-  ir=n
-10 continue
-    if (l.gt.1) then
-      l=l-1
-      rra=ra(l)
-    else
-      rra=ra(ir)
-      ra(ir)=ra(1)
-      ir=ir-1
-      if(ir.eq.1)then
-        ra(1)=rra
-        return
-      end if
-    end if
-    i=l
-    j=l+1
-20  if (j.le.ir)then
-      if(j.lt.ir)then
-        if(ra(j).lt.ra(j+1))j=j+1
-      end if
-      if(rra.lt.ra(j))then
-        ra(i)=ra(j)
-        i=j
-        j=j+j
-      else
-        
-        j=ir+1
-        
-      end if
-      goto 20
-    end if
-    ra(i)=rra
-  goto 10
-end subroutine
-subroutine hpsortn(n,ra)
-  implicit none
-  integer,intent(inout)::n
-  real,dimension(:), intent(inout)::ra
-  integer::i,ir,j,l
-  if (n.lt.2)return
-  call hpsort(n,ra)
-  l=1
-  do i =2,n
-    if (ra(i).gt.ra(l))then
-      l=l+1
-      ra(l)=ra(i)
-    end if 
-  end do
-  n=l
-end subroutine
-subroutine hpsort2d(n,ra,m,c)
-  implicit none
-  integer,intent(in)::n,m,c
-  real,dimension(:,:), intent(inout)::ra
-  integer::i,ir,j,l
-  real,dimension(m)::rra
-
-  
-  if(n.lt.2) return
-  l=n/2+1
-  ir=n
-10 continue
-    if (l.gt.1) then
-      l=l-1
-      rra=ra(:,l)
-    else
-      rra=ra(:,ir)
-      ra(:,ir)=ra(:,1)
-      ir=ir-1
-      if(ir.eq.1)then
-        ra(:,1)=rra
-        return
-      end if
-    end if
-    i=l
-    j=l+1
-20  if (j.le.ir)then
-      if(j.lt.ir)then
-        if(ra(c,j).lt.ra(c,j+1))j=j+1
-      end if
-      if(rra(c).lt.ra(c,j))then
-        ra(:,i)=ra(:,j)
-        i=j
-        j=j+j
-      else
-        
-        j=ir+1
-        
-      end if
-      goto 20
-    end if
-    ra(:,i)=rra
-  goto 10
-end subroutine
 end program hw2

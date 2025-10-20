@@ -18,7 +18,8 @@
             },
             "options": {
                 "cdw": "${workspaceRoot}"
-            }
+            },
+            "dependsOn":["compilemod-debug"]
             
         },
         {
