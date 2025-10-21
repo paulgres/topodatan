@@ -71,10 +71,14 @@ do i = 1,n-1
         !dch(k3)=d/2.0
         !EDGES
         !j->l, i->j, i->l
-        d = max(max(dvr1(i,j),dvr1(i,l)),d)
+        d = max(max(dvr1(j,i),dvr1(l,i)),d)
         dvr2(l,j,i)=d
         r=round(trad(pts(:,i),pts(:,j),pts(:,l))+.001,3)
+
         k=k+1
+        faces(1:6,k) = reshape([pts(:,i),pts(:,j),pts(:,l)],[6])
+        faces(7,k) = d
+        faces(8,k) = r
         d2r(k,nedge(i,j,n))=r
         d2r(k,nedge(j,l,n))=r
         d2r(k,nedge(i,l,n))=r
@@ -112,9 +116,13 @@ write (*, '('//int2str(n)//'f6.2)') dch2
 ! print *
 ! write (*, '(f6.2)') dch(1:k3)
 call hpsort2d(k1,edges,6,6)
+call hpsort2d(k,faces,8,8)
 open(newunit=f,file='edges.txt',status='replace',action='write',iostat=f)
 write (f,'(4(1x,ES19.12), 2f6.2)',err=501) edges(:,1:k1)
 501 close(f)
+open(newunit=f,file='faces.txt',status='replace',action='write',iostat=f)
+write (f,'(6(1x,ES19.12), 2f6.2)',err=502) faces(:,1:k)
+502 close(f)
 !print *, anint(trad(pts(:,1),pts(:,4),pts(:,3))*1000.0)/1000.0
 
 
@@ -134,9 +142,9 @@ print *, "rank: ",l
 print *
 write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2r
 print *
-write (*, '('// int2str(cnk(n,3)) //'l2)') d2 !(d2r.le.1.25)
+write (*, '('// int2str(cnk(n,3)) //'l2)') d2 
 print *, triangl(d2)
-!write (*, '('// int2str(cnk(n,3)) //'l2)') (d2r.le.1.25+.001)
+
 contains
 
 
