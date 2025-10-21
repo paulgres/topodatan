@@ -85,7 +85,7 @@ do i = 1,n-1
     end do
   
 end do
-d1=((d1ch.gt.0.0+.001).and.(d1ch.le.1.25+.001))
+d1=((d1ch.gt.0.0+.001)).and.(d1ch.le.1.25+.001)
 
 d2=((d2ch.gt.0.0)).and.(d2ch.le.1.25+.001)
 
@@ -112,6 +112,29 @@ write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2ch
 print *
 print *, "d2 Viettoris-Rips"
 write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2vr
+
+
+
+print *
+
+write (*, '('// int2str(cnk(n,2)) //'l2)') d1
+k=0
+do i=1,size(d1(:,1))
+  if (any(d1(i,:))) k=k+1
+end do
+l=triangl(d1)
+print *, "rank = ", l, "; nullity = ", k-l, "; beta-1 = ", k-l-0
+k1=l
+print *
+
+write (*, '('// int2str(cnk(n,3)) //'l2)') d2
+k=0
+do i=1,size(d2(:,1))
+  if (any(d2(i,:))) k=k+1
+end do
+l=triangl(d2)
+print *, "rank = ", l, "; nullity = ", k-l, "; beta-2 = ", k-l-0
+
 contains
 
 
