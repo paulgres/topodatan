@@ -34,7 +34,8 @@
             ],
             "options": {
                 "cdw": "${workspaceRoot}"
-            }
+            },
+            "dependsOn":["compilemod-release"]
         },
         {
             "label": "compilemod-debug",
