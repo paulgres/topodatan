@@ -10,12 +10,14 @@ data = dlmread(fileName); % Reads the file into a matrix
 % Column 2: y_start
 % Column 3: x_end
 % Column 4: y_end
-
-x_start = data(:, 1); % All rows, 1st column
-y_start = data(:, 2); % All rows, 2nd column
-x_end = data(:, 3);   % All rows, 3rd column
-y_end = data(:, 4);   % All rows, 4th column
-
+X = [-1.0,0.0,1.0,0.0];
+Y = [0,-2,0,2];
+x_start = data(:, 1)'; % All rows, 1st column
+y_start = data(:, 2)'; % All rows, 2nd column
+x_end = data(:, 3)';   % All rows, 3rd column
+y_end = data(:, 4)';   % All rows, 4th column
+eepsvr = data(:,5)';
+eepsch = data(:,6)';
 % --- 2. Prepare data for plotting line segments ---
 % To plot N segments, you need an X-vector and a Y-vector, each with 2*N + 1 elements.
 % Each segment is defined by [x_start, x_end, NaN] and [y_start, y_end, NaN].
@@ -35,7 +37,10 @@ Y_plot = Y_plot(:); % Convert to a single column vector
 % --- 1. Import the data ---
 fileName = 'faces.txt'; % Replace with your actual file name
 data = dlmread(fileName); % Reads the file into a matrix
-
+fepsvr = data(:,7)';
+fepsch = data(:,8)';
+leps = sort(unique([eepsvr,eepsch,fepsvr,fepsch]));
+disp (leps);
 % Correctly reshape the data for plotting:
 % N rows (triangles) x 6 columns (x1 y1 x2 y2 x3 y3)
 num_triangles = size(data, 1);
@@ -56,36 +61,61 @@ Y_coords(:, 2) = data(:, 4); % y2
 Y_coords(:, 3) = data(:, 6); % y3
 
 
-% --- 3. Plot the line segments ---
-fig= figure; % Create a new figure window
-subplot(1,2,1);
-plot(X_plot, Y_plot, '--b', 'LineWidth', .5); % Plot as blue lines
+for j=1:length(leps)
+  % --- 3. Plot the line segments ---
+  fig= figure; % Create a new figure window
+  
+  subplot(1,2,1);
+  
+  k=length(eepsch(eepsch<=leps(j)));
+  plot([x_start(1:k);x_end(1:k)], [y_start(1:k); y_end(1:k)], '--b', 'LineWidth', .5); % Plot as blue lines
+  hold on;
+  scatter(X, Y, 50, 'black', 'filled');
+  colors = jet(num_triangles); 
+  
+  for i = 1:num_triangles
+    if fepsch(i)>leps(j) 
+      break;
+    end
+      % Use 'patch' to plot a filled 2D polygon (the triangle)
+      patch(X_coords(i, :), Y_coords(i, :), colors(i, :), ...
+            'EdgeColor', 'none',  'FaceAlpha', 0.6); 
+      
+      % Note: In 2D, the third argument to patch defines the color, 
+      % not Z coordinates.
+  end
+  
+  % --- 4. Add labels and title (optional but recommended) ---
+  xlabel('X');
+  ylabel('Y');
+  title("Čech, epsilon = " +num2str(leps(j)));
+  grid on;
+  axis equal; % Ensure proper aspect ratio for visualization
+  subplot(1,2,2);
 
-colors = jet(num_triangles); 
-
-for i = 1:num_triangles
-    % Use 'patch' to plot a filled 2D polygon (the triangle)
-    patch(X_coords(i, :), Y_coords(i, :), colors(i, :), ...
-          'EdgeColor', 'none',  'FaceAlpha', 0.6); 
-    
-    % Note: In 2D, the third argument to patch defines the color, 
-    % not Z coordinates.
+  k=length(eepsvr(eepsvr<=leps(j)));
+  if k>0
+    plot([x_start(1:k);x_end(1:k)], [y_start(1:k); y_end(1:k)], '--b', 'LineWidth', .5); % Plot as blue lines
+  end
+  hold on;
+  scatter(X, Y, 50, 'black', 'filled');
+  for i = 1:num_triangles
+    if fepsvr(i)>leps(j) 
+      break;
+    end
+      % Use 'patch' to plot a filled 2D polygon (the triangle)
+      patch(X_coords(i, :), Y_coords(i, :), colors(i, :), ...
+            'EdgeColor', 'none',  'FaceAlpha', 0.6); 
+      
+      % Note: In 2D, the third argument to patch defines the color, 
+      % not Z coordinates.
+  end
+  % --- 4. Add labels and title (optional but recommended) ---
+  xlabel('X');
+  ylabel('Y');
+  title("Viettoris-Rips, epsilon = " +num2str(leps(j)));
+  grid on;
+  axis equal; % Ensure proper aspect ratio for visualization
+  hold off;
+  saveas(fig,"fig"+num2str(j)+".pdf")
 end
-
-% --- 4. Add labels and title (optional but recommended) ---
-xlabel('X Coordinate');
-ylabel('Y Coordinate');
-title('Line Segments Imported from File');
-grid on;
-axis equal; % Ensure proper aspect ratio for visualization
-subplot(1,2,2);
-plot(X_plot, Y_plot, '--b', 'LineWidth', .5); % Plot as blue lines
-
-% --- 4. Add labels and title (optional but recommended) ---
-xlabel('X Coordinate');
-ylabel('Y Coordinate');
-title('Line Segments Imported from File');
-grid on;
-axis equal; % Ensure proper aspect ratio for visualization
-
-saveas(fig,"fig.pdf")
