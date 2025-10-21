@@ -85,21 +85,22 @@ do i = 1,n-1
     end do
   
 end do
-d1=((d1r.gt.0.0+.001).and.(d1r.le.1.15+.001))
-d2=((d2r.gt.0.0)).and.(d2r.le.1.2+.001)!(d2r.le.1.25).and.
+d1=((d1r.gt.0.0+.001).and.(d1r.le.1.25+.001))
+
+d2=((d2r.gt.0.0)).and.(d2r.le.1.25+.001)
 print *, "k1 =  ", k1
 print *, "k2 =  ", k2
 print *, "k3 =  ", k3
 print *
 print *, "Viettoris-Rips"
-write (*, '(5f6.2)') dvr1
+write (*, '('//int2str(n)//'f6.2)') dvr1
 print *
-write (*, '(5f6.2)') dvr2
+write (*, '('//int2str(n)//'f6.2)') dvr2
 print *
 print *, "Cech"
-write (*, '(5f6.2)') dch1
+write (*, '('//int2str(n)//'f6.2)') dch1
 print *
-write (*, '(5f6.2)') dch2
+write (*, '('//int2str(n)//'f6.2)') dch2
 ! print *
 ! write (*, '(f6.2)') dvr(1:k2)
 ! call hpsortn(k2,dvr)
@@ -115,10 +116,7 @@ open(newunit=f,file='edges.txt',status='replace',action='write',iostat=f)
 write (f,'(4(1x,ES19.12), 2f6.2)',err=501) edges(:,1:k1)
 501 close(f)
 !print *, anint(trad(pts(:,1),pts(:,4),pts(:,3))*1000.0)/1000.0
-l=triangl(d1)
 
-
-print *, "rank: ",l
 
 
 print *
@@ -129,6 +127,10 @@ print *
 write (*, '('// int2str(cnk(n,2)) //'l2)') (d1r.le.1.15+.001)
 print *
 write (*, '('// int2str(cnk(n,2)) //'l2)') d1
+l=triangl(d1)
+
+
+print *, "rank: ",l
 print *
 write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2r
 print *
