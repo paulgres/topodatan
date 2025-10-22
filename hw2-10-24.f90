@@ -16,7 +16,8 @@ program hw2
     real::faces(m*3+2,n*(n-1)*(n-2)/6),d2ch(n*(n-1)*(n-2)/6,n*(n-1)/2)
     real::d1vr(n*(n-1)/2,n),d2vr(n*(n-1)*(n-2)/6,n*(n-1)/2)
     real, dimension(m,n) ::pts
-    pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2./), shape=(/m,n/))
+    integer::ne, nf
+    pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.2/), shape=(/m,n/))
     eps = 4
     write (*, '(2f6.2)') pts
 k1=0
@@ -85,18 +86,11 @@ do i = 1,n-1
     end do
   
 end do
-d1=((d1ch.gt.0.0+.001)).and.(d1ch.le.1.25+.001)
 
-d2=((d2ch.gt.0.0)).and.(d2ch.le.1.25+.001)
 
 call hpsort2d(k1,edges,6,6)
 call hpsort2d(k,faces,8,8)
-open(newunit=f,file='edges.txt',status='replace',action='write',iostat=f)
-write (f,'(4(1x,ES19.12), 2f6.2)',err=501) edges(:,1:k1)
-501 close(f)
-open(newunit=f,file='faces.txt',status='replace',action='write',iostat=f)
-write (f,'(6(1x,ES19.12), 2f6.2)',err=502) faces(:,1:k)
-502 close(f)
+
 
 
 print *
@@ -115,16 +109,10 @@ write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2vr
 
 
 
-print *
+eps=2.71
+d1=((d1ch.gt.0.0+.001)).and.(d1ch.le.eps)
 
-write (*, '('// int2str(cnk(n,2)) //'l2)') d1
-k=0
-do i=1,size(d1(:,1))
-  if (any(d1(i,:))) k=k+1
-end do
-l=triangl(d1)
-print *, "rank = ", l, "; nullity = ", k-l, "; beta-1 = ", k-l-0
-k1=l
+d2=((d2ch.gt.0.0)).and.(d2ch.le.eps)
 print *
 
 write (*, '('// int2str(cnk(n,3)) //'l2)') d2
@@ -134,6 +122,26 @@ do i=1,size(d2(:,1))
 end do
 l=triangl(d2)
 print *, "rank = ", l, "; nullity = ", k-l, "; beta-2 = ", k-l-0
+k2=l
+ne=0
+do i=1,size(d1(:,1))
+  if (any(d1(i,:))) ne=ne+1
+end do
+write (*, '('// int2str(cnk(n,2)) //'l2)') d1
+
+l=triangl(d1)
+print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", ne-l-k2
+
+print *
+
+
+open(newunit=f,file='edges.txt',status='replace',action='write',iostat=f)
+write (f,'(4(1x,ES19.12), 2f6.2)',err=501) edges(:,1:k1)
+501 close(f)
+open(newunit=f,file='faces.txt',status='replace',action='write',iostat=f)
+write (f,'(6(1x,ES19.12), 2f6.2)',err=502) faces(:,1:k)
+502 close(f)
+
 
 contains
 
