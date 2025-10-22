@@ -1,7 +1,7 @@
 % --- 1. Import the data ---
 fileName = 'edges.txt'; % Replace with your actual file name
 data = dlmread(fileName); % Reads the file into a matrix
-
+betas = dlmread('betas.txt')
 % Alternatively, use readmatrix (available in newer MATLAB versions):
 % data = readmatrix(fileName);
 
@@ -86,7 +86,7 @@ for j=1:length(leps)
   end
   
   % --- 4. Add labels and title (optional but recommended) ---
-  xlabel('X');
+  xlabel("beta2="+num2str(betas(j,2))+", beta1="+num2str(betas(j,3)));
   ylabel('Y');
   title("Čech, epsilon = " +num2str(leps(j)));
   grid on;
@@ -111,7 +111,7 @@ for j=1:length(leps)
       % not Z coordinates.
   end
   % --- 4. Add labels and title (optional but recommended) ---
-  xlabel('X');
+  xlabel("beta2="+num2str(betas(j,4))+", beta1="+num2str(betas(j,5)));
   ylabel('Y');
   title("Viettoris-Rips, epsilon = " +num2str(leps(j)));
   grid on;
