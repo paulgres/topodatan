@@ -7,6 +7,7 @@ program hw2
       integer::num
     end type
     
+    real, parameter::pi=atan(1.0)*4
     integer, parameter:: n=4,m=2
     logical::d1(n*(n-1)/2,n),fa(n,n,n),ed(n,n)
     logical::d2(n*(n-1)*(n-2)/6,n*(n-1)/2)
@@ -14,10 +15,12 @@ program hw2
     real:: eps,d,r,edges(m*2+2,n*(n-1)/2),d1ch(n*(n-1)/2,n),dvr1(n,n),dch1(n,n) 
     real::dvr2(n,n,n), dch2(n,n,n), dch(n*(n-1)),dvr(n*(n-1)/2),epss(n*(n-1)*2)
     real::faces(m*3+2,n*(n-1)*(n-2)/6),d2ch(n*(n-1)*(n-2)/6,n*(n-1)/2)
-    real::d1vr(n*(n-1)/2,n),d2vr(n*(n-1)*(n-2)/6,n*(n-1)/2)
+    real::d1vr(n*(n-1)/2,n),d2vr(n*(n-1)*(n-2)/6,n*(n-1)/2),c
     real, dimension(m,n) ::pts
     integer::ne, nf, lepss,b2ch, b1ch, b2vr, b1vr
-    pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
+    !pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
+    c = cos(pi/4)
+    pts = reshape((/0.,0.,0.,c,c,0.,c,0.,c,0.,c,c /), shape=(/m,n/))
     eps = 4
     write (*, '(2f6.2)') pts
 k1=0
@@ -62,6 +65,7 @@ do i = 1,n-1
       edges(2*m+1,k1) = d
       edges(2*m+2,k1) = d/2.0
   end do
+  !goto 200
   do j = i+1, n-1
       do l = j+1,n
         d = round(norm2(pts(:,l)-pts(:,j)),3)
@@ -86,7 +90,7 @@ do i = 1,n-1
         dch(k3)=r
       end do
     end do
-  
+  200 continue
 end do
 
 
