@@ -39,7 +39,7 @@ fileName = 'faces.txt'; % Replace with your actual file name
 data = dlmread(fileName); % Reads the file into a matrix
 fepsvr = data(:,7)';
 fepsch = data(:,8)';
-leps = sort(unique([eepsvr,eepsch,fepsvr,fepsch]));
+%leps = sort(unique([eepsvr,eepsch,fepsvr,fepsch,.5]));
 disp (leps);
 % Correctly reshape the data for plotting:
 % N rows (triangles) x 6 columns (x1 y1 x2 y2 x3 y3)
@@ -60,7 +60,7 @@ Y_coords(:, 1) = data(:, 2); % y1
 Y_coords(:, 2) = data(:, 4); % y2
 Y_coords(:, 3) = data(:, 6); % y3
 
-
+leps = betas(:,1);
 for j=1:length(leps)
   % --- 3. Plot the line segments ---
   fig= figure; % Create a new figure window
@@ -86,7 +86,7 @@ for j=1:length(leps)
   end
   
   % --- 4. Add labels and title (optional but recommended) ---
-  xlabel("beta2="+num2str(betas(j,2))+", beta1="+num2str(betas(j,3)));
+  xlabel("beta2="+num2str(betas(j,2))+", beta1="+num2str(betas(j,3))+", beta0="+num2str(betas(j,6)));
   ylabel('Y');
   title("Čech, epsilon = " +num2str(leps(j)));
   grid on;
@@ -111,7 +111,7 @@ for j=1:length(leps)
       % not Z coordinates.
   end
   % --- 4. Add labels and title (optional but recommended) ---
-  xlabel("beta2="+num2str(betas(j,4))+", beta1="+num2str(betas(j,5)));
+  xlabel("beta2="+num2str(betas(j,4))+", beta1="+num2str(betas(j,5))+", beta0="+num2str(betas(j,7)));
   ylabel('Y');
   title("Viettoris-Rips, epsilon = " +num2str(leps(j)));
   grid on;

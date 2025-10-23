@@ -17,10 +17,10 @@ program hw2
     real::faces(m*3+2,n*(n-1)*(n-2)/6),d2ch(n*(n-1)*(n-2)/6,n*(n-1)/2)
     real::d1vr(n*(n-1)/2,n),d2vr(n*(n-1)*(n-2)/6,n*(n-1)/2),c
     real, dimension(m,n) ::pts
-    integer::ne, nf, lepss,b2ch, b1ch, b2vr, b1vr
-    !pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
+    integer::ne, nf, lepss,b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
+    pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
     c = cos(pi/4)
-    pts = reshape((/0.,0.,0.,c,c,0.,c,0.,c,0.,c,c /), shape=(/m,n/))
+    !pts = reshape((/0.,0.,0.,c,c,0.,c,0.,c,0.,c,c /), shape=(/m,n/))
     eps = 4
     write (*, '(2f6.2)') pts
 k1=0
@@ -105,6 +105,8 @@ write (f,'('//int2str(3*m)//'(1x,ES19.12), 2f6.2)',err=502) faces(:,1:k)
 epss(1:k3) = dch(1:k3)
 lepss = k3+k2
 epss(k3+1:lepss) = dvr(1:k2)
+lepss = lepss+1
+epss(lepss)=.5
 call hpsortn(lepss, epss)
 print *, epss(1:lepss)
 print *, dch(1:k3)
@@ -152,7 +154,8 @@ do j = 1,lepss
     
     l=triangl(d1)
     b1ch = ne-l-k2
-    print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", b1ch
+    b0ch=n-l
+    print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", b1ch, "beta-0 = ", b0ch
     d1=((d1vr.gt.0.0+.001)).and.(d1vr.le.eps)
     
     d2=((d2vr.gt.0.0+.001)).and.(d2vr.le.eps)
@@ -175,9 +178,10 @@ do j = 1,lepss
     
     l=triangl(d1)
     b1vr = ne-l-k2
-    print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", b1vr
+    b0vr = n-l
+    print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", b1vr, "beta-0 = ", b0vr
     
-    write (f,'(f6.2, 4i2)',err=503) eps, b2ch, b1ch, b2vr, b1vr
+    write (f,'(f6.2, 6i2)',err=503) eps, b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
     print *
 end do
 
