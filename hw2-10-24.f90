@@ -13,11 +13,11 @@ program hw2
     logical,allocatable,dimension(:,:)::d1,d2
     real, allocatable, dimension(:,:)::pts,edges, faces,d1vr,d2vr,d1ch,d2ch,dvr1,dch1
     real, allocatable, dimension(:)::dch, dvr,epss
-    real::eps, d, r,c
+    real::eps, d, r
     integer::i,j,k,k1,k2,f,l,k3
     
     !real::dvr2(n,n,n), dch2(n,n,n)
-    integer::ne, nf, lepss,b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
+    integer::ne, lepss,b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
     !pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
     !pts = reshape((/-c,0.,0.,c,c,0.,0.,-c,3.+c,0. /), shape=(/m,n/))
     !eps = 4
@@ -31,9 +31,9 @@ end do
 11  continue
 call allocb(d1,cnk(n,2),n)
 call allocb(d2,cnk(n,3),cnk(n,2))
-call alloc(dvr, n)
-call alloc(dch, n)
-call alloc(epss, cnk(n,2))
+call alloc(dvr, cnk(n,2))
+call alloc(dch, cnk(n,3)+cnk(n,2))
+call alloc(epss, cnk(n,3)+2*cnk(n,2))
 call allocm(dvr1,n,n)
 call allocm(dch1,n,n)
 call allocm(edges,m*2+2,cnk(n,2))

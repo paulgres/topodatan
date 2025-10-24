@@ -2,16 +2,16 @@ module modaux
     implicit none
     private
     public::int2str,round,trad,hpsort,hpsort2d,hpsortn,cnk,nedge,tch
-    real::round,trad,tch
-    integer::cnk,nedge
+    !real::round,trad,tch
+    !integer::cnk,nedge
     
 contains
-pure function nedge(i,j,n)
-
-integer,intent(in)::i,j,n
-nedge = n*(i-1)+j-i*(i+1)/2
+pure integer function nedge(i,j,n)
+  integer,intent(in)::i,j,n
+  nedge = n*(i-1)+j-i*(i+1)/2
 end function
-  pure function cnk(n,k)
+
+pure integer function cnk(n,k)
   integer, intent(in)::n,k
   integer::i,j
   cnk=n
@@ -28,15 +28,15 @@ end function
     character(:), allocatable::res
     write(s, '(I20)') i
     res = trim(adjustl(s))  
-  end function
-  recursive function factorial(n)result(r)
-integer::r
-integer,intent(in)::n
-if (n.eq.2)then
-  r=2
-else
-  r = n*factorial(n-1)
-end if
+ end function
+recursive integer function factorial(n)result(r)
+  
+  integer,intent(in)::n
+  if (n.eq.2)then
+    r=2
+  else
+    r = n*factorial(n-1)
+  end if
 end function factorial
 
 
@@ -87,7 +87,7 @@ subroutine hpsortn(n,ra)
   implicit none
   integer,intent(inout)::n
   real,dimension(:), intent(inout)::ra
-  integer::i,ir,j,l
+  integer::i,l
   if (n.lt.2)return
   call hpsort(n,ra)
   l=1
@@ -144,23 +144,23 @@ subroutine hpsort2d(n,ra,m,c)
   goto 10
 end subroutine
 
-pure function cosv(v,u)
+pure real function cosv(v,u)
   real, dimension(:),intent(in)::v,u
-  real::cosv
+  
   cosv = dot_product(v,u)/norm2(v)/norm2(u)
 end function
 
-function cos3(a,b,c)
+pure real function cos3(a,b,c)
   real,dimension(:),intent(in):: a,b,c
-  real,dimension(2)::u,v
-  real::cos3
-  write (*,'(6f8.4)') a,b,c
+  !real,dimension(size(a))::u,v
+  
+  
   cos3 = dot_product(b-a,c-a)/norm2(b-a)/norm2(c-a)!cosv(u,v)
 end function
 
-function tch(a,b,c)
+pure real function tch(a,b,c)
   real,dimension(:),intent(in):: a,b,c
-  real,dimension(2)::m
+  
   if (cos3(a,b,c).le.0.0) then 
     tch = norm2(b-c)/2.
   else if (cos3(b,a,c).le.0.0) then 
@@ -184,7 +184,7 @@ end function
 !   tmass = max(n1,n2,n3)
 ! end function 
 
-pure function trad(a,b,c)
+pure real function trad(a,b,c)
   real, dimension(:),intent(in):: a,b,c
   
   
@@ -196,7 +196,7 @@ pure function trad(a,b,c)
 
 end function
 
-pure function round(v,n)
+pure real function round(v,n)
   implicit none
   real, intent(in) :: v
   
