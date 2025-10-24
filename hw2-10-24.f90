@@ -8,7 +8,7 @@ program hw2
     end type
     
     real, parameter::pi=atan(1.0)*4
-    integer, parameter:: n=4,m=2
+    integer, parameter:: n=5,m=2
     logical::d1(n*(n-1)/2,n),fa(n,n,n),ed(n,n)
     logical::d2(n*(n-1)*(n-2)/6,n*(n-1)/2)
     integer::i,j,k,tt(n),k1,k2,f,l,k3
@@ -18,10 +18,10 @@ program hw2
     real::d1vr(n*(n-1)/2,n),d2vr(n*(n-1)*(n-2)/6,n*(n-1)/2),c
     real, dimension(m,n) ::pts
     integer::ne, nf, lepss,b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
-    pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
+    !pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
     c = cos(pi/4)
-    !pts = reshape((/0.,0.,0.,c,c,0.,c,0.,c,0.,c,c /), shape=(/m,n/))
-    eps = 4
+    pts = reshape((/-c,0.,0.,c,c,0.,0.,-c,3.+c,0. /), shape=(/m,n/))
+    !eps = 4
     write (*, '(2f6.2)') pts
 k1=0
 k2=0
@@ -73,7 +73,7 @@ do i = 1,n-1
         !j->l, i->j, i->l
         d = max(max(dvr1(j,i),dvr1(l,i)),d)
         dvr2(l,j,i)=d
-        r=round(trad(pts(:,i),pts(:,j),pts(:,l)),3)
+        r=round(tch(pts(:,i),pts(:,j),pts(:,l)),3)
 
         k=k+1
         faces(1:3*m,k) = reshape([pts(:,i),pts(:,j),pts(:,l)],[3*m])
@@ -106,7 +106,7 @@ epss(1:k3) = dch(1:k3)
 lepss = k3+k2
 epss(k3+1:lepss) = dvr(1:k2)
 lepss = lepss+1
-epss(lepss)=.5
+epss(lepss)=.25
 call hpsortn(lepss, epss)
 print *, epss(1:lepss)
 print *, dch(1:k3)

@@ -10,8 +10,11 @@ betas = dlmread('betas.txt')
 % Column 2: y_start
 % Column 3: x_end
 % Column 4: y_end
+c=cos(pi/4);
 X = [-1.0,0.0,1.0,0.0];
 Y = [0,-2,0,2];
+X=[-c,0,c,0,c+3];
+Y=[0,-c,0,c,0];
 x_start = data(:, 1)'; % All rows, 1st column
 y_start = data(:, 2)'; % All rows, 2nd column
 x_end = data(:, 3)';   % All rows, 3rd column

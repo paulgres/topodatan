@@ -1,8 +1,8 @@
 module modaux
     implicit none
     private
-    public::int2str,round,trad,hpsort,hpsort2d,hpsortn,cnk,nedge
-    real::round,trad
+    public::int2str,round,trad,hpsort,hpsort2d,hpsortn,cnk,nedge,tch
+    real::round,trad,tch
     integer::cnk,nedge
     
 contains
@@ -143,6 +143,46 @@ subroutine hpsort2d(n,ra,m,c)
     ra(:,i)=rra
   goto 10
 end subroutine
+
+pure function cosv(v,u)
+  real, dimension(:),intent(in)::v,u
+  real::cosv
+  cosv = dot_product(v,u)/norm2(v)/norm2(u)
+end function
+
+pure function cos3(a,b,c)
+  real,dimension(:),intent(in):: a,b,c
+  real::cos3
+  cos3 = cosv(b-a,c-a)
+end function
+
+pure function tch(a,b,c)
+  real,dimension(:),intent(in):: a,b,c
+  real,dimension(2)::m
+  real::al,be,ga
+  if (cos3(a,b,c).le.0.0) then 
+    tch = norm2(b-c)/2.
+  else if (cos3(b,a,c).le.0.0) then 
+    tch = norm2(a-c)/2.
+  else if (cos3(c,a,b).le.0.0) then 
+    tch = norm2(a-b)/2.
+  else
+    tch = trad(a,b,c)
+  end if 
+end function
+
+! pure function tmass(a,b,c)
+
+!   real,dimension(:),intent(in):: a,b,c
+!   real,dimension(2)::m
+!   real::n1,n3,n2
+!   m=(b-a+c-a)/3+a
+!   n1=norm2((b-a+c-a)/3)
+!   n2=norm2((a-b+c-b)/3)
+!   n3=norm2((b-c+a-c)/3)
+!   tmass = max(n1,n2,n3)
+! end function 
+
 pure function trad(a,b,c)
   real, dimension(:),intent(in):: a,b,c
   
