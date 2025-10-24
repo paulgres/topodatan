@@ -150,16 +150,17 @@ pure function cosv(v,u)
   cosv = dot_product(v,u)/norm2(v)/norm2(u)
 end function
 
-pure function cos3(a,b,c)
+function cos3(a,b,c)
   real,dimension(:),intent(in):: a,b,c
+  real,dimension(2)::u,v
   real::cos3
-  cos3 = cosv(b-a,c-a)
+  write (*,'(6f8.4)') a,b,c
+  cos3 = dot_product(b-a,c-a)/norm2(b-a)/norm2(c-a)!cosv(u,v)
 end function
 
-pure function tch(a,b,c)
+function tch(a,b,c)
   real,dimension(:),intent(in):: a,b,c
   real,dimension(2)::m
-  real::al,be,ga
   if (cos3(a,b,c).le.0.0) then 
     tch = norm2(b-c)/2.
   else if (cos3(b,a,c).le.0.0) then 

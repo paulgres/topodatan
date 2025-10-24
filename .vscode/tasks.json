@@ -9,7 +9,7 @@
                 "-g",
                 "-o", "${fileBasenameNoExtension}.exe",
                 "-Wall",
-                "-mcmodel=medium",
+                "-mcmodel=large",
                 "${fileBasename}",             "mod*.o"
             ],
             "group": {
@@ -44,7 +44,7 @@
             "args": [
                 "-g",
                 "-c",
-                "-mcmodel=medium",
+                "-mcmodel=large",
                 "-Wall",
                 "mod*.f90"
             ],

@@ -5,7 +5,7 @@
     contains
     
     subroutine allocm(a, n,m)
-        real(kind=8), allocatable, intent(inout) :: a(:,:)
+        real(kind=4), allocatable, intent(inout) :: a(:,:)
         integer(kind=4), intent(in) :: n,m
         integer :: stat
         character(len=100) :: errmsg
@@ -58,7 +58,7 @@
         if (stat > 0) error stop errmsg
     end subroutine freeb
     subroutine freem(a)
-        real(kind=8), allocatable, intent(in out) :: a(:,:)
+        real(kind=4), allocatable, intent(in out) :: a(:,:)
         integer :: stat
         character(len=100) :: errmsg
         if (.not. allocated(a)) return

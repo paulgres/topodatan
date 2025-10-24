@@ -1,6 +1,7 @@
 program hw2
   use modgauss
   use modaux
+  use modmem
     implicit none
 
     type :: point
@@ -8,21 +9,44 @@ program hw2
     end type
     
     real, parameter::pi=atan(1.0)*4
-    integer, parameter:: n=5,m=2
-    logical::d1(n*(n-1)/2,n),fa(n,n,n),ed(n,n)
-    logical::d2(n*(n-1)*(n-2)/6,n*(n-1)/2)
-    integer::i,j,k,tt(n),k1,k2,f,l,k3
-    real:: eps,d,r,edges(m*2+2,n*(n-1)/2),d1ch(n*(n-1)/2,n),dvr1(n,n),dch1(n,n) 
-    real::dvr2(n,n,n), dch2(n,n,n), dch(n*(n-1)),dvr(n*(n-1)/2),epss(n*(n-1)*2)
-    real::faces(m*3+2,n*(n-1)*(n-2)/6),d2ch(n*(n-1)*(n-2)/6,n*(n-1)/2)
-    real::d1vr(n*(n-1)/2,n),d2vr(n*(n-1)*(n-2)/6,n*(n-1)/2),c
-    real, dimension(m,n) ::pts
+    integer:: n,m
+    logical,allocatable,dimension(:,:)::d1,d2
+    real, allocatable, dimension(:,:)::pts,edges, faces,d1vr,d2vr,d1ch,d2ch,dvr1,dch1
+    real, allocatable, dimension(:)::dch, dvr,epss
+    real::eps, d, r,c
+    integer::i,j,k,k1,k2,f,l,k3
+    
+    !real::dvr2(n,n,n), dch2(n,n,n)
     integer::ne, nf, lepss,b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
     !pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
-    c = cos(pi/4)
-    pts = reshape((/-c,0.,0.,c,c,0.,0.,-c,3.+c,0. /), shape=(/m,n/))
+    !pts = reshape((/-c,0.,0.,c,c,0.,0.,-c,3.+c,0. /), shape=(/m,n/))
     !eps = 4
-    write (*, '(2f6.2)') pts
+open(newunit=f, file='xy.txt', status='old', action='read')
+n = 0
+m=2
+do
+  read(unit=f, fmt=*, end=11)
+  n = n + 1
+end do
+11  continue
+call allocb(d1,cnk(n,2),n)
+call allocb(d2,cnk(n,3),cnk(n,2))
+call alloc(dvr, n)
+call alloc(dch, n)
+call alloc(epss, cnk(n,2))
+call allocm(dvr1,n,n)
+call allocm(dch1,n,n)
+call allocm(edges,m*2+2,cnk(n,2))
+call allocm(faces,m*3+2,cnk(n,3))
+call allocm(d1ch,cnk(n,2),n)
+call allocm(d1vr,cnk(n,2),n)
+call allocm(d2ch,cnk(n,3),cnk(n,2))
+call allocm(d2vr,cnk(n,3),cnk(n,2))
+call allocm(pts,m,n)
+!goto 999
+rewind(f)
+read (f,'(2(1x,ES19.12))',err=504) pts
+504 close(unit=f)
 k1=0
 k2=0
 k3=0
@@ -34,10 +58,9 @@ d1vr = 0.0
 d2vr = 0.0
 dvr1=-1.0
 dch1=-1.0 
-dvr2=-1.0
-dch2=-1.0 
-d1=.false.
+!d1=.false.
   k=0
+print *, "Start"
 do i = 1,n-1
 
   f=0
@@ -72,7 +95,7 @@ do i = 1,n-1
         !EDGES
         !j->l, i->j, i->l
         d = max(max(dvr1(j,i),dvr1(l,i)),d)
-        dvr2(l,j,i)=d
+        !dvr2(l,j,i)=d
         r=round(tch(pts(:,i),pts(:,j),pts(:,l)),3)
 
         k=k+1
@@ -85,7 +108,7 @@ do i = 1,n-1
         d2vr(k,nedge(i,j,n))=d
         d2vr(k,nedge(j,l,n))=d
         d2vr(k,nedge(i,l,n))=d
-        dch2(l,j,i) = r
+        !dch2(l,j,i) = r
         k3=k3+1
         dch(k3)=r
       end do
@@ -108,24 +131,24 @@ epss(k3+1:lepss) = dvr(1:k2)
 lepss = lepss+1
 epss(lepss)=.25
 call hpsortn(lepss, epss)
-print *, epss(1:lepss)
-print *, dch(1:k3)
-print *, epss(1:k2)
+! print *, epss(1:lepss)
+! print *, dch(1:k3)
+! print *, epss(1:k2)
 
 
-print *
-print *, "d1 Cech"
-write (*, '('// int2str(cnk(n,2)) //'f6.2)') d1ch
-print *
-print *, "d1 Viettoris-Rips"
-write (*, '('// int2str(cnk(n,2)) //'f6.2)') d1vr
+! print *
+! print *, "d1 Cech"
+! write (*, '('// int2str(cnk(n,2)) //'f6.2)') d1ch
+! print *
+! print *, "d1 Viettoris-Rips"
+! write (*, '('// int2str(cnk(n,2)) //'f6.2)') d1vr
 
-print *
-print *, "d2 Cech"
-write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2ch
-print *
-print *, "d2 Viettoris-Rips"
-write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2vr
+! print *
+! print *, "d2 Cech"
+! write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2ch
+! print *
+! print *, "d2 Viettoris-Rips"
+! write (*, '('// int2str(cnk(n,3)) //'f6.2)') d2vr
 
 
 
@@ -135,61 +158,72 @@ do j = 1,lepss
     d1=((d1ch.gt.0.0+.001)).and.(d1ch.le.eps)
     
     d2=((d2ch.gt.0.0+.001)).and.(d2ch.le.eps)
-    print *
     
-    write (*, '('// int2str(cnk(n,3)) //'l2)') d2
+    !write (*, '('// int2str(cnk(n,3)) //'l2)') d2
     k=0
     do i=1,size(d2(:,1))
       if (any(d2(i,:))) k=k+1
     end do
     l=triangl(d2)
     b2ch = k-l-0
-    print *, "rank = ", l, "; nullity = ", k-l, "; beta-2 = ", b2ch
+    !print *, "rank = ", l, "; nullity = ", k-l, "; beta-2 = ", b2ch
     k2=l
     ne=0
     do i=1,size(d1(:,1))
       if (any(d1(i,:))) ne=ne+1
     end do
-    write (*, '('// int2str(cnk(n,2)) //'l2)') d1
+    !write (*, '('// int2str(cnk(n,2)) //'l2)') d1
     
     l=triangl(d1)
     b1ch = ne-l-k2
     b0ch=n-l
-    print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", b1ch, "beta-0 = ", b0ch
+    !print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", b1ch, "beta-0 = ", b0ch
     d1=((d1vr.gt.0.0+.001)).and.(d1vr.le.eps)
     
     d2=((d2vr.gt.0.0+.001)).and.(d2vr.le.eps)
-    print *
     
-    write (*, '('// int2str(cnk(n,3)) //'l2)') d2
+    !write (*, '('// int2str(cnk(n,3)) //'l2)') d2
     k=0
     do i=1,size(d2(:,1))
       if (any(d2(i,:))) k=k+1
     end do
     l=triangl(d2)
     b2vr = k-l-0
-    print *, "rank = ", l, "; nullity = ", k-l, "; beta-2 = ", b2vr
+    !print *, "rank = ", l, "; nullity = ", k-l, "; beta-2 = ", b2vr
     k2=l
     ne=0
     do i=1,size(d1(:,1))
       if (any(d1(i,:))) ne=ne+1
     end do
-    write (*, '('// int2str(cnk(n,2)) //'l2)') d1
+    !write (*, '('// int2str(cnk(n,2)) //'l2)') d1
     
     l=triangl(d1)
     b1vr = ne-l-k2
     b0vr = n-l
-    print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", b1vr, "beta-0 = ", b0vr
+    !print *, "rank = ", l, "; nullity = ", ne-l, "; beta-1 = ", b1vr, "beta-0 = ", b0vr
     
-    write (f,'(f6.2, 6i2)',err=503) eps, b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
-    print *
+    write (f,'(f6.2, 6i7)',err=503) eps, b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
 end do
 
 503 close(f)
 
-
-
-
+999 continue
+!goto 1000
+call freem(pts)
+call freem(d2vr)
+call freem(d2ch)
+call freem(d1vr)
+call freem(d1ch)
+call freem(faces)
+call freem(edges)
+call freem(dch1)
+call freem(dvr1)
+call freea(dvr)
+call freea(dch)
+call freea(epss)
+call freeb(d2)
+call freeb(d1)
+1000 continue
 contains
 
 

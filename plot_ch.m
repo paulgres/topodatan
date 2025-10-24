@@ -1,4 +1,22 @@
 % --- 1. Import the data ---
+
+
+filename = 'xy.txt';
+
+% 2. Read the data from the file into a matrix
+% 'readmatrix' is the recommended function for reading numeric data from text files.
+try
+    data = readmatrix(filename);
+catch ME
+    fprintf('Error reading file: %s\n', ME.message);
+    disp('Please ensure the file "data.txt" exists and contains only numeric data.');
+    return; % Exit if reading fails
+end
+
+% 3. Separate the data into X and Y vectors
+X = data(:, 1); % First column is X
+Y = data(:, 2); % Second column is Y
+
 fileName = 'edges.txt'; % Replace with your actual file name
 data = dlmread(fileName); % Reads the file into a matrix
 betas = dlmread('betas.txt')
@@ -11,8 +29,6 @@ betas = dlmread('betas.txt')
 % Column 3: x_end
 % Column 4: y_end
 c=cos(pi/4);
-X = [-1.0,0.0,1.0,0.0];
-Y = [0,-2,0,2];
 %X=[-c,0,c,0,c+3];
 %Y=[0,-c,0,c,0];
 x_start = data(:, 1)'; % All rows, 1st column
@@ -68,12 +84,12 @@ for j=1:length(leps)
   % --- 3. Plot the line segments ---
   fig= figure; % Create a new figure window
   
-  subplot(1,2,1);
+  
   
   k=length(eepsch(eepsch<=leps(j)));
   plot([x_start(1:k);x_end(1:k)], [y_start(1:k); y_end(1:k)], '--b', 'LineWidth', .5); % Plot as blue lines
   hold on;
-  scatter(X, Y, 50, 'black', 'filled');
+  scatter(X, Y, 5, 'black', 'filled');
   colors = jet(num_triangles); 
   
   for i = 1:num_triangles
@@ -94,31 +110,5 @@ for j=1:length(leps)
   title("Čech, epsilon = " +num2str(leps(j)));
   grid on;
   axis equal; % Ensure proper aspect ratio for visualization
-  subplot(1,2,2);
-
-  k=length(eepsvr(eepsvr<=leps(j)));
-  if k>0
-    plot([x_start(1:k);x_end(1:k)], [y_start(1:k); y_end(1:k)], '--b', 'LineWidth', .5); % Plot as blue lines
-  end
-  hold on;
-  scatter(X, Y, 50, 'black', 'filled');
-  for i = 1:num_triangles
-    if fepsvr(i)>leps(j) 
-      break;
-    end
-      % Use 'patch' to plot a filled 2D polygon (the triangle)
-      patch(X_coords(i, :), Y_coords(i, :), colors(i, :), ...
-            'EdgeColor', 'none',  'FaceAlpha', 0.6); 
-      
-      % Note: In 2D, the third argument to patch defines the color, 
-      % not Z coordinates.
-  end
-  % --- 4. Add labels and title (optional but recommended) ---
-  xlabel("beta2="+num2str(betas(j,4))+", beta1="+num2str(betas(j,5))+", beta0="+num2str(betas(j,7)));
-  ylabel('Y');
-  title("Viettoris-Rips, epsilon = " +num2str(leps(j)));
-  grid on;
-  axis equal; % Ensure proper aspect ratio for visualization
   hold off;
-  saveas(fig,"fig"+num2str(j)+".pdf")
 end
