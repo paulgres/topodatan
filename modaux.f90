@@ -99,9 +99,9 @@ subroutine hpsortn(n,ra)
   end do
   n=l
 end subroutine
-subroutine hpsort2d(n,ra,m,c)
+subroutine hpsort2d(n,ra,m,r)
   implicit none
-  integer,intent(in)::n,m,c
+  integer,intent(in)::n,m,r
   real,dimension(:,:), intent(inout)::ra
   integer::i,ir,j,l
   real,dimension(m)::rra
@@ -127,9 +127,9 @@ subroutine hpsort2d(n,ra,m,c)
     j=l+1
 20  if (j.le.ir)then
       if(j.lt.ir)then
-        if(ra(c,j).lt.ra(c,j+1))j=j+1
+        if(ra(r,j).lt.ra(r,j+1))j=j+1
       end if
-      if(rra(c).lt.ra(c,j))then
+      if(rra(r).lt.ra(r,j))then
         ra(:,i)=ra(:,j)
         i=j
         j=j+j

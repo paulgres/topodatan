@@ -1,6 +1,7 @@
 program simcomp
     use modmem
     use modgauss
+    use modaux
 implicit none
 real(kind=8),parameter::pi = 4*atan(1.0_8)
 
@@ -8,7 +9,7 @@ real(kind=8),parameter::pi = 4*atan(1.0_8)
 integer::f,f1,i,j,k,l,k1,k2,n,m,l1,tt(1024)
 logical, allocatable::d1(:,:),d2(:,:),t(:,:)!,s2(:,:,:)
 real, parameter:: epsilon = .45
-real(kind=8), allocatable::r(:,:), ts1(:,:)
+real(kind=4), allocatable::r(:,:), ts1(:,:)
 real(kind=4)::d,stop,start
 character(50)::fmt1, fmt2
 open(newunit=f, file='xy.txt', status='old', action='read')
