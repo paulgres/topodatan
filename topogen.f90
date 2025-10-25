@@ -3,26 +3,29 @@ program topogen
     use modaux
 implicit none
 real(kind=4),parameter::pi = 4*atan(1.0)
-integer(kind=4),parameter::n=4,m=2
+integer(kind=4),parameter::n=16,m=2
 !real(4)::dmat(n,n)
 integer::f,i,j,idx(n)
 
 
 real(kind=4), allocatable::t(:,:), r(:,:), t2(:,:), pts(:,:)
-real(kind=4)::d,dmin
+real(kind=4)::d,dmin,c
+c = cos(pi/4.)
     !pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
     !pts = reshape((/-c,0.,0.,c,c,0.,0.,-c,3.+c,0. /), shape=(/m,n/))
 idx = 0
 call allocm(t,n,m)
 call allocm(r,n,m)
-call allocm(pts,n,m)
-pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
+!call allocm(pts,n,m)
+!pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
+
+    !pts = reshape((/-c,0.,0.,c,c,0.,0.,-c,3.+c,0. /), shape=(/m,n/))
 call random_number(t)
 r(1:n/2,1)=(t(1:n/2,1)*.3+.85)*cos(2*pi*t(1:n/2,2))+1
 r((n/2+1):,1)=(t((n/2+1):,1)*.3+.85)*cos(2*pi*t((n/2+1):,2))-1
 r(1:n/2,2)=(t(1:n/2,1)*.3+.85)*sin(2*pi*t(1:n/2,2))
 r((n/2+1):,2)=(t((n/2+1):,1)*.3+.85)*sin(2*pi*t((n/2+1):,2))
-t2=transpose(pts)
+t2=transpose(r)
 open(newunit=f,file='xy.txt')
 write (f,'(2(1x,ES19.12))',err=502) t2
 502 close(f)

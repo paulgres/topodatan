@@ -64,7 +64,7 @@ subroutine hpsort(n,ra)
       end if
     end if
     i=l
-    j=l+1
+    j=l+l
 20  if (j.le.ir)then
       if(j.lt.ir)then
         if(ra(j).lt.ra(j+1))j=j+1
@@ -124,7 +124,7 @@ subroutine hpsort2d(n,ra,m,r)
       end if
     end if
     i=l
-    j=l+1
+    j=l+l
 20  if (j.le.ir)then
       if(j.lt.ir)then
         if(ra(r,j).lt.ra(r,j+1))j=j+1

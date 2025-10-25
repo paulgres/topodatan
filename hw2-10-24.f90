@@ -62,7 +62,6 @@ dvr1=-1.0
 dch1=-1.0 
 !d1=.false.
   k=0
-print *, "Start"
 do i = 1,n-1
 
   f=0
@@ -89,9 +88,7 @@ do i = 1,n-1
       edges(m+1:2*m,k1) = pts(:,j)
       edges(2*m+1,k1) = d
       edges(2*m+2,k1) = d/2.0
-  end do
-  !goto 200
-  do j = i+1, n-1
+      if (j.eq.n)goto 200
       do l = j+1,n
         d = round(norm2(pts(:,l)-pts(:,j)),pre)
         !EDGES
@@ -114,14 +111,15 @@ do i = 1,n-1
         k3=k3+1
         dch(k3)=r
       end do
-    end do
+  end do
+  
   200 continue
 end do
 
 t= edges(2*m+2,:)
 call hpsort2d(k1,edges,2*m+2,2*m+2)
 
-call hpsort1(k1,t)
+call hpsort(k1,t)
 call hpsort2d(k,faces,3*m+2,3*m+2)
 open(newunit=f,file='edges.txt',status='replace',action='write',iostat=f)
 write (f,'('// int2str(2*m)// '(1x,ES19.12), 2f6.2)',err=501) edges(:,1:k1)
@@ -208,44 +206,44 @@ contains
 
 
 SUBROUTINE hpsort1(n,ra)
-INTEGER n
-REAL ra(n)
+  INTEGER n
+  REAL ra(n)
 
-INTEGER i,ir,j,l
-REAL rra
-if (n.lt.2) return
-l=n/2+1
-ir=n
-10 continue
-if(l.gt.1)then 
-l=l-1
-rra=ra(l)
-else 
-rra=ra(ir) 
-ra(ir)=ra(1) 
-ir=ir-1 
-if(ir.eq.1)then 
-ra(1)=rra 
-return
-endif
-endif
-i=l 
-
+  INTEGER i,ir,j,l
+  REAL rra
+  if (n.lt.2) return
+  l=n/2+1
+  ir=n
+  10 continue
+  if(l.gt.1)then 
+    l=l-1
+    rra=ra(l)
+  else 
+    rra=ra(ir) 
+    ra(ir)=ra(1) 
+    ir=ir-1 
+    if(ir.eq.1)then 
+      ra(1)=rra 
+      return
+    endif
+  endif
+  i=l 
+  j = 2 * i  ! j is the index of the left child
 20 if(j.le.ir)then 
-if(j.lt.ir)then
-if(ra(j).lt.ra(j+1))j=j+1 
-endif
-if(rra.lt.ra(j))then 
-ra(i)=ra(j)
-i=j
-j=j+j
-else 
-j=ir+1
-endif
-goto 20
-endif
-ra(i)=rra 
-goto 10
+    if(j.lt.ir)then
+      if(ra(j).lt.ra(j+1))j=j+1 
+    endif
+    if(rra.lt.ra(j))then 
+      ra(i)=ra(j)
+      i=j
+      j=2*i
+    else 
+      j=ir+1
+    endif
+    goto 20
+  endif
+  ra(i)=rra 
+  goto 10
 END
 
 end program hw2
