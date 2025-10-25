@@ -1,4 +1,21 @@
 % --- 1. Import the data ---
+
+filename = 'xy.txt';
+
+% 2. Read the data from the file into a matrix
+% 'readmatrix' is the recommended function for reading numeric data from text files.
+try
+    data = readmatrix(filename);
+catch ME
+    fprintf('Error reading file: %s\n', ME.message);
+    disp('Please ensure the file "data.txt" exists and contains only numeric data.');
+    return; % Exit if reading fails
+end
+
+% 3. Separate the data into X and Y vectors
+X = data(:, 1); % First column is X
+Y = data(:, 2); % Second column is Y
+
 fileName = 'edges.txt'; % Replace with your actual file name
 data = dlmread(fileName); % Reads the file into a matrix
 betas = dlmread('betas.txt')
@@ -10,9 +27,9 @@ betas = dlmread('betas.txt')
 % Column 2: y_start
 % Column 3: x_end
 % Column 4: y_end
-c=cos(pi/4);
-X = [-1.0,0.0,1.0,0.0];
-Y = [0,-2,0,2];
+% c=cos(pi/4);
+% X = [-1.0,0.0,1.0,0.0];
+% Y = [0,-2,0,2];
 %X=[-c,0,c,0,c+3];
 %Y=[0,-c,0,c,0];
 x_start = data(:, 1)'; % All rows, 1st column
@@ -73,7 +90,7 @@ for j=1:length(leps)
   k=length(eepsch(eepsch<=leps(j)));
   plot([x_start(1:k);x_end(1:k)], [y_start(1:k); y_end(1:k)], '--b', 'LineWidth', .5); % Plot as blue lines
   hold on;
-  scatter(X, Y, 50, 'black', 'filled');
+  scatter(X, Y, 5, 'black', 'filled');
   colors = jet(num_triangles); 
   
   for i = 1:num_triangles
@@ -101,7 +118,7 @@ for j=1:length(leps)
     plot([x_start(1:k);x_end(1:k)], [y_start(1:k); y_end(1:k)], '--b', 'LineWidth', .5); % Plot as blue lines
   end
   hold on;
-  scatter(X, Y, 50, 'black', 'filled');
+  scatter(X, Y, 5, 'black', 'filled');
   for i = 1:num_triangles
     if fepsvr(i)>leps(j) 
       break;

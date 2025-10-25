@@ -1,8 +1,8 @@
 program topogen
     use modmem
 implicit none
-real(kind=4),parameter::pi = 4*atan(1.0_8)
-integer(kind=4),parameter::n=16*2,m=2
+real(kind=4),parameter::pi = 4*atan(1.0)
+integer(kind=4),parameter::n=3*2,m=2
 !real(4)::dmat(n,n)
 integer::f,i,j,idx(n)
 
