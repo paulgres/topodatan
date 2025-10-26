@@ -1,6 +1,6 @@
-% --- 1. Import the data ---
+% HW2
 
-filename = 'xy.txt';
+filename = 'xy4.txt';
 
 % 2. Read the data from the file into a matrix
 % 'readmatrix' is the recommended function for reading numeric data from text files.

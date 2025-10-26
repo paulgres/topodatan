@@ -21,7 +21,7 @@ program hw2
 
     
 f=101
-open(newunit=f, file='xy.txt', status='old', action='read')
+open(newunit=f, file='xy4.txt', status='old', action='read')
 n = 0
 m=2
 do
@@ -88,8 +88,11 @@ do i = 1,n-1
       edges(m+1:2*m,k1) = pts(:,j)
       edges(2*m+1,k1) = d
       edges(2*m+2,k1) = d/2.0
-      if (j.eq.n)goto 200
-      do l = j+1,n
+      
+      
+  end do
+  do j=i+1,n-1
+    do l = j+1,n
         d = round(norm2(pts(:,l)-pts(:,j)),pre)
         !EDGES
         !j->l, i->j, i->l
@@ -112,7 +115,6 @@ do i = 1,n-1
         dch(k3)=r
       end do
   end do
-  
   200 continue
 end do
 
