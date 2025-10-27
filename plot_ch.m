@@ -81,19 +81,25 @@ Y_coords(:, 3) = data(:, 6); % y3
 
 leps = betas(:,1);
 for j=1:length(leps)
+    if leps(j)<.57
+        continue
+    end
+   if leps(j)>.72
+       break
+   end
   % --- 3. Plot the line segments ---
   fig= figure; % Create a new figure window
   
   
   
-  k=length(eepsch(eepsch<=leps(j)));
+  k=length(eepsvr(eepsvr<=leps(j)));
   plot([x_start(1:k);x_end(1:k)], [y_start(1:k); y_end(1:k)], '--b', 'LineWidth', .5); % Plot as blue lines
   hold on;
   scatter(X, Y, 5, 'black', 'filled');
   colors = jet(num_triangles); 
   
   for i = 1:num_triangles
-    if fepsch(i)>leps(j) 
+    if fepsvr(i)>leps(j) 
       break;
     end
       % Use 'patch' to plot a filled 2D polygon (the triangle)
@@ -105,9 +111,9 @@ for j=1:length(leps)
   end
   
   % --- 4. Add labels and title (optional but recommended) ---
-  xlabel("beta2="+num2str(betas(j,2))+", beta1="+num2str(betas(j,3))+", beta0="+num2str(betas(j,6)));
+  xlabel("beta2="+num2str(betas(j,2))+", beta1="+num2str(betas(j,3))+", beta0="+num2str(betas(j,4)));
   ylabel('Y');
-  title("Čech, epsilon = " +num2str(leps(j)));
+  title("VR, epsilon = " +num2str(leps(j)));
   grid on;
   axis equal; % Ensure proper aspect ratio for visualization
   hold off;

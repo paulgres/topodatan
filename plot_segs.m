@@ -1,6 +1,6 @@
 % HW2
 
-filename = 'xy4.txt';
+filename = 'xy5.txt';
 
 % 2. Read the data from the file into a matrix
 % 'readmatrix' is the recommended function for reading numeric data from text files.

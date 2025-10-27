@@ -21,7 +21,7 @@ program hw2
 
     
 f=101
-open(newunit=f, file='xy4.txt', status='old', action='read')
+open(newunit=f, file='xy5.txt', status='old', action='read')
 n = 0
 m=2
 do
