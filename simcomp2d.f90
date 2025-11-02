@@ -1,4 +1,4 @@
-program hw2
+program simpcomp2d
   use modgauss
   use modaux
   use modmem
@@ -12,12 +12,12 @@ program hw2
     integer, parameter::pre=2
     integer:: n,m
     logical,allocatable,dimension(:,:)::d1,d2
-    real, allocatable, dimension(:,:)::pts,edges, faces,d1vr,d2vr,d1ch,d2ch,dvr1,dch1
-    real, allocatable, dimension(:)::dch, dvr,epss,t(:)
-    real::eps, d, r,start,stop
+    real, allocatable, dimension(:,:)::pts,edges, faces,d1vr,d2vr,dvr1
+    real, allocatable, dimension(:)::dvr,epss,t(:)
+    real::eps, d, start,stop
     integer::i,j,k,k1,k2,f,l,k3
 
-    integer::ne, lepss,b2ch, b1ch, b2vr, b1vr, b0ch, b0vr
+    integer::ne, lepss, b2vr, b1vr, b0vr
 
     
 f=101
@@ -31,18 +31,14 @@ end do
 11  continue
 
 call allocm(dvr1,n,n)
-call allocm(dch1,n,n)
 call allocm(edges,m*2+2,cnk(n,2))
 call allocm(faces,m*3+2,cnk(n,3))
-call allocm(d1ch,cnk(n,2),n)
 call allocm(d1vr,cnk(n,2),n)
-call allocm(d2ch,cnk(n,3),cnk(n,2))
 call allocm(d2vr,cnk(n,3),cnk(n,2))
 call allocm(pts,m,n)
 call allocb(d1,cnk(n,2),n)
 call allocb(d2,cnk(n,3),cnk(n,2))
 call alloc(dvr, cnk(n,2))
-call alloc(dch, cnk(n,3)+cnk(n,2))
 call alloc(epss, cnk(n,3)+2*cnk(n,2))
 call alloc(t,cnk(n,2))
 !goto 999
@@ -54,12 +50,9 @@ k2=0
 k3=0
 faces=0.
 edges=0.
-d1ch = 0.0
-d2ch = 0.0
 d1vr = 0.0
 d2vr = 0.0
 dvr1=-1.0
-dch1=-1.0 
 !d1=.false.
   k=0
 print *, "Start evaluating epsilon for edges and faces"
@@ -74,16 +67,10 @@ do i = 1,n-1
       k3=k3+1
       dvr1(j,i) = d
       dvr(k2)=d
-      ! dch1(j,i) = d/2.0
-      ! dch(k3)=d/2.0
     else
       d=dvr1(j,i)
     end if
       k1=k1+1
-      ! d1(k1,i) = .true.
-      ! d1(k1,j) = .true.
-      ! d1ch(k1,i) = d/2
-      ! d1ch(k1,j) = d/2
       d1vr(k1,i) = d
       d1vr(k1,j) = d
       edges(1:m,k1) = pts(:,i)
@@ -100,24 +87,15 @@ do i = 1,n-1
         !j->l, i->j, i->l
         d = max(max(dvr1(j,i),dvr1(l,i)),d)
         
-        ! r=round(tch(pts(:,i),pts(:,j),pts(:,l)),pre)
-
         k=k+1
         faces(1:3*m,k) = reshape([pts(:,i),pts(:,j),pts(:,l)],[3*m])
         faces(3*m+1,k) = d
-        faces(3*m+2,k) = r
-        ! d2ch(k,nedge(i,j,n))=r
-        ! d2ch(k,nedge(j,l,n))=r
-        ! d2ch(k,nedge(i,l,n))=r
         d2vr(k,nedge(i,j,n))=d
         d2vr(k,nedge(j,l,n))=d
         d2vr(k,nedge(i,l,n))=d
         
-        k3=k3+1
-        dch(k3)=r
       end do
   end do
-  200 continue
 end do
 call cpu_time(stop)
 print *, 'elapsed:', stop-start
@@ -141,27 +119,7 @@ print *, "Start evaluating betas"
 call cpu_time(start)
 do j = 1,lepss
   eps = epss(j)
-    ! d1=((d1ch.gt.delta)).and.(d1ch.le.eps+delta)
-    ! d2=((d2ch.gt.delta)).and.(d2ch.le.eps+delta)
-    ! k=0
-    ! do i=1,size(d2(:,1))
-    !   if (any(d2(i,:))) k=k+1
-    ! end do
-    ! l=triangl(d2)
-    ! b2ch = k-l-0
-
-    ! k2=l
-    ! ne=0
-    ! do i=1,size(d1(:,1))
-    !   if (any(d1(i,:))) ne=ne+1
-    ! end do
-    
-    ! l=triangl(d1)
-    ! b1ch = ne-l-k2
-    ! b0ch=n-l
-
     d1=((d1vr.gt.0.0+.001)).and.(d1vr.le.eps)
-    
     d2=((d2vr.gt.0.0+.001)).and.(d2vr.le.eps)
 
     k=0
@@ -188,11 +146,8 @@ call cpu_time(stop)
 print *, 'elapsed:', stop-start
 503 close(f)
 
-999 continue
-!goto 1000
 call freea(t)
 call freea(epss)
-call freea(dch)
 call freea(dvr)
 
 
@@ -200,17 +155,13 @@ call freeb(d2)
 call freeb(d1)
 call freem(pts)
 call freem(d2vr)
-call freem(d2ch)
 call freem(d1vr)
-call freem(d1ch)
 call freem(faces)
 call freem(edges)
-call freem(dch1)
 call freem(dvr1)
 
-1000 continue
 contains
 
 
 
-end program hw2
+end program simpcomp2d

@@ -81,10 +81,10 @@ Y_coords(:, 3) = data(:, 6); % y3
 
 leps = betas(:,1);
 for j=1:length(leps)
-    if leps(j)<.57
+    if leps(j)<.98
         continue
     end
-   if leps(j)>.72
+   if leps(j)>1.73
        break
    end
   % --- 3. Plot the line segments ---
