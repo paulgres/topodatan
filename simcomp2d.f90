@@ -21,7 +21,7 @@ program simpcomp2d
 
     
 f=101
-open(newunit=f, file='xy.txt', status='old', action='read')
+open(newunit=f, file='xy_t1_2.txt', status='old', action='read')
 n = 0
 m=2
 do
@@ -43,7 +43,7 @@ call alloc(epss, cnk(n,3)+2*cnk(n,2))
 call alloc(t,cnk(n,2))
 !goto 999
 rewind(f)
-read (f,'(2(1x,ES19.12))',err=504) pts
+read (f,'('//int2str(m)//'(1x,ES19.12))',err=504) pts
 504 close(unit=f)
 k1=0
 k2=0
@@ -111,6 +111,8 @@ write (f,'('//int2str(3*m)//'(1x,ES19.12), 2f6.2)',err=502) faces(:,1:k)
 !epss(1:k3) = dch(1:k3)
 lepss = k2
 epss(1:lepss) = dvr(1:k2)
+lepss = lepss+1
+epss(lepss) = 0.
 
 call hpsortn(lepss, epss)
 

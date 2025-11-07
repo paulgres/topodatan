@@ -9,7 +9,7 @@
 %  1.674194968132E+00  7.210549125343E-01
 
 % 1. Define the filename
-filename = 'xy.txt';
+filename = 'xy_t1_2.txt';
 
 % 2. Read the data from the file into a matrix
 % 'readmatrix' is the recommended function for reading numeric data from text files.

@@ -1,7 +1,7 @@
 % --- 1. Import the data ---
 
 
-filename = 'xy.txt';
+filename = 'xy_t1_2.txt';
 
 % 2. Read the data from the file into a matrix
 % 'readmatrix' is the recommended function for reading numeric data from text files.
@@ -81,12 +81,12 @@ Y_coords(:, 3) = data(:, 6); % y3
 
 leps = betas(:,1);
 for j=1:length(leps)
-    if leps(j)<.98
-        continue
-    end
-   if leps(j)>1.73
-       break
-   end
+   %  if leps(j)<.98
+   %      continue
+   %  end
+   % if leps(j)>1.73
+   %     break
+   % end
   % --- 3. Plot the line segments ---
   fig= figure; % Create a new figure window
   
@@ -95,7 +95,7 @@ for j=1:length(leps)
   k=length(eepsvr(eepsvr<=leps(j)));
   plot([x_start(1:k);x_end(1:k)], [y_start(1:k); y_end(1:k)], '--b', 'LineWidth', .5); % Plot as blue lines
   hold on;
-  scatter(X, Y, 5, 'black', 'filled');
+  scatter(X, Y, 20, 'black', 'filled');
   colors = jet(num_triangles); 
   
   for i = 1:num_triangles
@@ -115,6 +115,12 @@ for j=1:length(leps)
   ylabel('Y');
   title("VR, epsilon = " +num2str(leps(j)));
   grid on;
+  axis([-1.25 1.25 -1. 1])
   axis equal; % Ensure proper aspect ratio for visualization
   hold off;
+  saveas(fig,"fig/fig"+num2str(j)+".eps")
+  saveas(fig,"fig/fig"+num2str(j)+".png")
+  if mod(j,2)==1
+  fprintf('\\subfigure{\\includegraphics[scale=0.5]{fig/fig%d.png}}\\quad\\subfigure{\\includegraphics[scale=0.5]{fig/fig%d.png}}\\\\\n', j, j+1);
+  end 
 end
