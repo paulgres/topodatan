@@ -39,7 +39,7 @@ call allocm(pts,m,n)
 call allocb(d1,cnk(n,2),n)
 call allocb(d2,cnk(n,3),cnk(n,2))
 call alloc(dvr, cnk(n,2))
-call alloc(epss, cnk(n,3)+2*cnk(n,2))
+call alloc(epss, cnk(n,2))
 call alloc(t,cnk(n,2))
 !goto 999
 rewind(f)

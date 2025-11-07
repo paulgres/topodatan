@@ -9,7 +9,7 @@
 %  1.674194968132E+00  7.210549125343E-01
 
 % 1. Define the filename
-filename = 'xy.txt';
+filename = 'xy64.txt';
 
 % 2. Read the data from the file into a matrix
 % 'readmatrix' is the recommended function for reading numeric data from text files.
@@ -27,7 +27,7 @@ Y = data(:, 2); % Second column is Y
 
 % 4. Plot the points
 figure; % Create a new figure window
-plot(X, Y, 'k.', 'MarkerSize', 3, 'LineWidth', 1); % 'ro' plots red circles
+plot(X, Y, 'k.', 'MarkerSize', 10, 'LineWidth', 1); % 'ro' plots red circles
 title('Plot of Points from File');
 xlabel('X Data');
 ylabel('Y Data');

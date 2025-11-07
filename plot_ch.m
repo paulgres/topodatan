@@ -1,7 +1,9 @@
+
+close all; clc; clear;
 % --- 1. Import the data ---
 
 
-filename = 'xy.txt';
+filename = 'xy64.txt';
 
 % 2. Read the data from the file into a matrix
 % 'readmatrix' is the recommended function for reading numeric data from text files.
@@ -19,7 +21,7 @@ Y = data(:, 2); % Second column is Y
 
 fileName = 'edges.txt'; % Replace with your actual file name
 data = dlmread(fileName); % Reads the file into a matrix
-betas = dlmread('betas.txt')
+betas = dlmread('betas.txt');
 % Alternatively, use readmatrix (available in newer MATLAB versions):
 % data = readmatrix(fileName);
 
@@ -78,17 +80,21 @@ X_coords(:, 3) = data(:, 5); % x3
 Y_coords(:, 1) = data(:, 2); % y1
 Y_coords(:, 2) = data(:, 4); % y2
 Y_coords(:, 3) = data(:, 6); % y3
-
+delete 'fig/fig*';
 leps = betas(:,1);
 for j=1:length(leps)
-    if leps(j)<.98
+    if .06<leps(j) && leps(j)<.65
         continue
     end
-   if leps(j)>1.73
+   if leps(j)>.90 && leps(j)<1.57
+       continue
+   end
+
+   if leps(j)>1.65 
        break
    end
   % --- 3. Plot the line segments ---
-  fig= figure; % Create a new figure window
+  fig= figure('visible','off'); % Create a new figure window
   
   
   
@@ -117,4 +123,9 @@ for j=1:length(leps)
   grid on;
   axis equal; % Ensure proper aspect ratio for visualization
   hold off;
+  saveas(fig,"fig/fig"+num2str(j)+".eps")
+  saveas(fig,"fig/fig"+num2str(j)+".png")
+  if mod(j,2)==0
+  fprintf('\\subfigure{\\includegraphics[scale=0.5]{fig/fig%d.png}}\\quad\\subfigure{\\includegraphics[scale=0.5]{fig/fig%d.png}}\\\\\n', j, j+1);
+  end 
 end
