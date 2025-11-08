@@ -19,9 +19,9 @@ end
 X = data(:, 1); % First column is X
 Y = data(:, 2); % Second column is Y
 
-fileName = 'edges.txt'; % Replace with your actual file name
+fileName = 'edges64.txt'; % Replace with your actual file name
 data = dlmread(fileName); % Reads the file into a matrix
-betas = dlmread('betas.txt');
+betas = dlmread('betas64.txt');
 % Alternatively, use readmatrix (available in newer MATLAB versions):
 % data = readmatrix(fileName);
 
@@ -56,7 +56,7 @@ Y_plot = Y_coords'; % Transpose to get a single column vector
 Y_plot = Y_plot(:); % Convert to a single column vector
 
 % --- 1. Import the data ---
-fileName = 'faces.txt'; % Replace with your actual file name
+fileName = 'faces64.txt'; % Replace with your actual file name
 data = dlmread(fileName); % Reads the file into a matrix
 fepsvr = data(:,7)';
 fepsch = data(:,8)';
