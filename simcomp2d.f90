@@ -21,9 +21,9 @@ program simpcomp2d
 
     
 f=101
-open(newunit=f, file='xy_t1_2.txt', status='old', action='read')
+open(newunit=f, file='xy_t1_1.txt', status='old', action='read')
 n = 0
-m=2
+m=3
 do
   read(unit=f, fmt=*, end=11)
   n = n + 1
@@ -115,6 +115,10 @@ lepss = lepss+1
 epss(lepss) = 0.
 
 call hpsortn(lepss, epss)
+write (*, '('//int2str(cnk(n,2))//'f6.2)') transpose(d1vr)
+print *
+write (*, '('//int2str(cnk(n,3))//'f6.2)') transpose(d2vr)
+print *
 
 open(newunit=f,file='betas.txt',status='replace',action='write',iostat=f)
 print *, "Start evaluating betas"
@@ -128,6 +132,9 @@ do j = 1,lepss
     do i=1,size(d2(:,1))
       if (any(d2(i,:))) k=k+1
     end do
+    print *, eps
+    write (*, '('//int2str(cnk(n,3))//'l2)') transpose(d2)
+    print *
     l=triangl(d2)
     b2vr = k-l-0
 
@@ -136,6 +143,7 @@ do j = 1,lepss
     do i=1,size(d1(:,1))
       if (any(d1(i,:))) ne=ne+1
     end do
+    write (*, '('//int2str(cnk(n,2))//'l2)') transpose(d1)
     
     l=triangl(d1)
     b1vr = ne-l-k2

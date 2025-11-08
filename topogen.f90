@@ -3,7 +3,7 @@ program topogen
     use modaux
 implicit none
 real(kind=4),parameter::pi = 4*atan(1.0)
-integer(kind=4),parameter::n=6,m=2
+integer(kind=4),parameter::n=6,m=3
 !real(4)::dmat(n,n)
 integer::f,i,j,idx(n),k
 
@@ -20,7 +20,13 @@ call allocm(pts,m,n)
 !pts = reshape((/ -1.,0.,0.,-2.,1.,0.,0.,2.0/), shape=(/m,n/))
 
     !pts = reshape((/-c,0.,0.,c,c,0.,0.,-c,3.+c,0. /), shape=(/m,n/))
-pts = reshape((/ 1.,0.,1./2.,sqrt(3.)/2., -1./2.,sqrt(3.)/2.,-1.,0.,-1./2.,-sqrt(3.)/2., 1./2.,-sqrt(3.)/2.  /), shape=(/m,n/))
+!pts = reshape((/ 1.,0.,1./2.,sqrt(3.)/2., -1./2.,sqrt(3.)/2.,-1.,0.,-1./2.,-sqrt(3.)/2., 1./2.,-sqrt(3.)/2.  /), shape=(/m,n/))
+pts = reshape([-1.,0.,0., &
+                0.,-1.,0.,&
+                1.,0.,0.,&
+                0.,1.,0.,&
+                0.,0.,1., & 
+                0.,0.,-1.], shape=[m,n])
 goto 100
 call random_number(t)
 k=n/10*6
@@ -31,8 +37,8 @@ r(1:k,2)=(t(1:k,1)*.3+.85)*sin(2*pi*t(1:k,2))
 r((k+1):,2)=(t((k+1):,1)*.3+.85)*sin(2*pi*t((k+1):,2))
 t2=transpose(r)
 100 continue
-open(newunit=f,file='xy_t1_2.txt')
-write (f,'(2(1x,ES19.12))',err=502) pts
+open(newunit=f,file='xy_t1_1.txt')
+write (f,'('// int2str(m)// '(1x,ES19.12))',err=502) pts
 502 close(f)
 goto 200
 deallocate(t2)
