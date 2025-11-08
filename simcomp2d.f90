@@ -115,9 +115,11 @@ lepss = lepss+1
 epss(lepss) = 0.
 
 call hpsortn(lepss, epss)
-write (*, '('//int2str(cnk(n,2))//'f6.2)') transpose(d1vr)
+write (*, '('//int2str(n)//'f6.2)') (dvr1)
 print *
-write (*, '('//int2str(cnk(n,3))//'f6.2)') transpose(d2vr)
+write (*, '('//int2str(cnk(n,2))//'f6.2)') (d1vr)
+print *
+write (*, '('//int2str(cnk(n,3))//'f6.2)') (d2vr)
 print *
 
 open(newunit=f,file='betas.txt',status='replace',action='write',iostat=f)
@@ -133,7 +135,7 @@ do j = 1,lepss
       if (any(d2(i,:))) k=k+1
     end do
     print *, eps
-    write (*, '('//int2str(cnk(n,3))//'l2)') transpose(d2)
+    write (*, '('//int2str(cnk(n,3))//'l2)') (d2)
     print *
     l=triangl(d2)
     b2vr = k-l-0
@@ -143,7 +145,7 @@ do j = 1,lepss
     do i=1,size(d1(:,1))
       if (any(d1(i,:))) ne=ne+1
     end do
-    write (*, '('//int2str(cnk(n,2))//'l2)') transpose(d1)
+    write (*, '('//int2str(cnk(n,2))//'l2)') (d1)
     
     l=triangl(d1)
     b1vr = ne-l-k2

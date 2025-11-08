@@ -24,10 +24,8 @@ module modgauss
                         l1=l1+1
                         goto 100
                     end if
-                    d1(i:,j)=((d1(i:,j).or.d1(i:,l)).and.(.not.(d1(i:,j).and.d1(i:,l))))
-                    !do k=m,size(t(1,:))
-                    !  t(j,k)=xor(t(j,k),t(l,k))
-                    !end do
+                    d1(i:,j)=((d1(i:,j).or.d1(i:,l)) &
+                        .and.(.not.(d1(i:,j).and.d1(i:,l))))
                 end if
     100 continue
             end do
